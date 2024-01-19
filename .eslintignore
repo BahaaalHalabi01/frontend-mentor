@@ -3,6 +3,7 @@ node_modules
 /build
 /.svelte-kit
 /package
+/mentor_assets
 .env
 .env.*
 !.env.example
