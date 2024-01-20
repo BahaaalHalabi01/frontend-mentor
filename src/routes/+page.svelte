@@ -2,20 +2,20 @@
 	import '../app.css';
 </script>
 
-<main class="min-h-screen py-24 px-64">
+<main class="min-h-screen lg:py-24 lg:px-64 md:px-32 md:py-12">
 	<div
-		class="bg-white p-10 rounded-2xl max-w-4xl flex items-start flex-col mx-auto gap-y-8 justify-center"
+		class="bg-white lg:p-10 md:p-5 md:rounded-2xl lg:max-w-4xl flex items-start flex-col mx-auto gap-y-8 justify-center"
 	>
+		<picture>
+			<img alt="omlette" src="/recipe-page/image-omelette.jpeg" class="md:rounded-xl" />
+		</picture>
 		<section>
-			<picture>
-				<img alt="omlette" src="/recipe-page/image-omelette.jpeg" class="rounded-xl" />
-			</picture>
-			<h1 class="text-5xl py-8" style="color:var(--dark-charcoal)">Simple Omelette Recipe</h1>
+			<h1 class="md:text-5xl text-4xl pb-8" style="color:var(--dark-charcoal)">Simple Omelette Recipe</h1>
 			<h2 class="pb-8">
 				An easy and quick dish, perfect for any meal. This classic omelette combines beaten eggs
 				cooked to perfection, optionally filled with your choice of cheese, vegetables, or meats.
 			</h2>
-			<div class="text-xl p-6 rounded-lg" style="background-color:var(--rose-white)">
+			<div class="p-6 rounded-lg" style="background-color:var(--rose-white)">
 				<span class="pb-4 text-2xl block font-semibold" style="color:var(--dark-raspberry)"
 					>Prepartion time</span
 				>
@@ -80,9 +80,9 @@
 		<hr class="w-full" />
 		<section class="min-w-full">
 			<h1 class="text-4xl pb-4" style="color:var(--nutmeg)">Nutrition</h1>
-			<h3 class="font-light pb-2">
+			<h2 class="font-light pb-2">
 				The table below shows nutritional values per serving without the additional fillings.
-			</h3>
+			</h2>
 			<table class="min-w-full">
 				<tbody>
 					<tr>
@@ -118,16 +118,19 @@
 		--dark-raspberry: hsl(332, 51%, 32%);
 	}
 
-	h1,
-	h2 {
+	h1 {
 		font-family: 'Young Serif', serif;
+	}
+
+	section {
+		@apply px-8;
 	}
 
 	main {
 		background-color: var(--eggshell);
 		color: var(--wenge-brown);
 		font-family: 'Outfit', sans-serif;
-		@apply text-lg;
+		@apply text-base;
 	}
 
 	ul {
