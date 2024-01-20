@@ -2,15 +2,108 @@
 	import '../app.css';
 </script>
 
-<main class="min-h-screen flex pt-24 px-64">
-	<section class="container mx-auto flex items-start justify-center">
-		<div class="bg-white p-8 rounded-2xl max-w-4xl">
+<main class="min-h-screen py-24 px-64">
+	<div
+		class="bg-white p-10 rounded-2xl max-w-4xl flex items-start flex-col mx-auto gap-y-8 justify-center"
+	>
+		<section>
 			<picture>
 				<img alt="omlette" src="/recipe-page/image-omelette.jpeg" class="rounded-xl" />
 			</picture>
-			<h1 class="text-5xl py-8">Simple Omelette Recipe</h1>
-		</div>
-	</section>
+			<h1 class="text-5xl py-8" style="color:var(--dark-charcoal)">Simple Omelette Recipe</h1>
+			<h2 class="pb-8">
+				An easy and quick dish, perfect for any meal. This classic omelette combines beaten eggs
+				cooked to perfection, optionally filled with your choice of cheese, vegetables, or meats.
+			</h2>
+			<div class="text-xl p-6 rounded-lg" style="background-color:var(--rose-white)">
+				<span class="pb-4 text-2xl block font-semibold" style="color:var(--dark-raspberry)"
+					>Prepartion time</span
+				>
+				<ul class="bold-list">
+					<li><span>Total:</span> Approximately 10 minutes</li>
+					<li><span>Preparation:</span> 5 minutes</li>
+					<li><span>Cooking:</span> 5 minutes</li>
+				</ul>
+			</div>
+		</section>
+		<section>
+			<h1 class="text-4xl pb-4" style="color:var(--nutmeg)">Ingredients</h1>
+			<ul class="list">
+				<li><span>2-3 large eggs</span></li>
+				<li><span>Salt, to taste</span></li>
+				<li>
+					<span> Pepper, to taste</span>
+				</li>
+				<li>
+					<span> 1 tablespoon of butter or oil </span>
+				</li>
+				<li>
+					<span>Optional fillings: cheese, diced vegetables, cooked meats, herbs </span>
+				</li>
+			</ul>
+		</section>
+		<hr class="w-full" />
+		<section>
+			<h1 class="text-4xl pb-4" style="color:var(--nutmeg)">Instructions</h1>
+			<ul class="bold-nutmeg-list">
+				<li>
+					<span> Beat the eggs:</span>
+					In a bowl, beat the eggs with a pinch of salt and pepper until they are well mixed. You can
+					add a tablespoon of water or milk for a fluffier texture.
+				</li>
+				<li>
+					<span> Heat the pan:</span>
+					Place a non-stick frying pan over medium heat and add butter or oil.
+				</li>
+				<li>
+					<span> Cook the omelette:</span>
+					Once the butter is melted and bubbling, pour in the eggs. Tilt the pan to ensure the eggs evenly
+					coat the surface.
+				</li>
+				<li>
+					<span> Add fillings (optional): </span>
+					When the eggs begin to set at the edges but are still slightly runny in the middle, sprinkle
+					your chosen fillings over one half of the omelette.
+				</li>
+				<li>
+					<span>Fold and serve: </span>
+					As the omelette continues to cook, carefully lift one edge and fold it over the fillings. Let
+					it cook for another minute, then slide it onto a plate.
+				</li>
+				<li>
+					<span> Enjoy: </span>
+					Serve hot, with additional salt and pepper if needed.
+				</li>
+			</ul>
+		</section>
+
+		<hr class="w-full" />
+		<section class="min-w-full">
+			<h1 class="text-4xl pb-4" style="color:var(--nutmeg)">Nutrition</h1>
+			<h3 class="font-light pb-2">
+				The table below shows nutritional values per serving without the additional fillings.
+			</h3>
+			<table class="min-w-full">
+				<tbody>
+					<tr>
+						<td> Calories </td>
+						<td> 277kcal </td>
+					</tr>
+					<tr>
+						<td> Carbs </td>
+						<td> 0g </td>
+					</tr><tr>
+						<td> Protein </td>
+						<td> 20g </td>
+					</tr>
+					<tr>
+						<td> Fat </td>
+						<td> 22g </td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</div>
 </main>
 
 <style>
@@ -25,12 +118,52 @@
 		--dark-raspberry: hsl(332, 51%, 32%);
 	}
 
-	h1 {
-		font-family: 'Young Serif',serif;
+	h1,
+	h2 {
+		font-family: 'Young Serif', serif;
 	}
 
 	main {
 		background-color: var(--eggshell);
+		color: var(--wenge-brown);
+		font-family: 'Outfit', sans-serif;
 		@apply text-lg;
+	}
+
+	ul {
+		@apply list-disc pl-6;
+	}
+
+	li {
+		@apply py-1 pl-4;
+	}
+
+	td {
+		@apply py-4 px-8 border-b;
+	}
+
+	tr td:last-child {
+		color: var(--nutmeg);
+		@apply font-bold;
+	}
+
+	.bold-nutmeg-list {
+		@apply list-decimal;
+	}
+	.bold-list li::marker,
+	.bold-nutmeg-list li::marker {
+		color: var(--dark-raspberry);
+		@apply text-base font-bold;
+	}
+
+	.bold-list li span,
+	.bold-nutmeg-list li span {
+		@apply font-bold;
+	}
+
+	.list li::marker,
+	.bold-nutmeg-list li::marker {
+		color: var(--nutmeg);
+		@apply text-base;
 	}
 </style>
