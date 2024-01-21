@@ -1,7 +1,3 @@
-<script>
-	import '../app.css';
-</script>
-
 <main class="min-h-screen lg:py-24 lg:px-64 md:px-32 md:py-12">
 	<div
 		class="bg-white lg:p-10 md:p-5 md:rounded-2xl lg:max-w-4xl flex items-start flex-col mx-auto gap-y-8 justify-center"
