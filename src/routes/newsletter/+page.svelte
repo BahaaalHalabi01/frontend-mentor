@@ -8,12 +8,12 @@
 </script>
 
 <main>
-	<div class="bg-white lg:p-6 md:rounded-[32px] flex mx-auto gap-y-8 justify-center max-w-fit">
+	<div class="bg-white md:p-6 md:rounded-[32px] flex mx-auto gap-y-8 justify-center md:max-w-fit md:flex-row flex-col max-w-full min-h-full md:min-h-fit pb-8 md:pb-0">
 		{#if !form?.success}
-			<section class="col-span-1 flex flex-col items-start justify-center pl-10 pr-16 gap-y-4">
+			<section class=" flex flex-col items-start justify-center md:pl-10 md:pr-16 px-6 gap-y-4 order-last md:order-first">
 				<h1>Stay updated!</h1>
-				<h2 class="w-[376px]">Join 60,000+ product managers receiving monthly updates on:</h2>
-				<ol>
+				<h2 class="max-w-[376px]">Join 60,000+ product managers receiving monthly updates on:</h2>
+				<ol class='px-6'>
 					<li><span>Product discovery and building what matters</span></li>
 					<li><span>Measuring to ensure updates are a success</span></li>
 					<li><span>And much more!</span></li>
@@ -36,17 +36,18 @@
 							placeholder={'email@company.com'}
 						/>
 					</label>
-					<button class="h-14 flex items-center w-full rounded-md justify-center">
+					<button class="h-14 flex items-center w-full rounded-md justify-center mt-auto">
 						Subscribe to monthly newsletter
 					</button>
 				</form>
 			</section>
-			<picture class="max-h-fit">
-				<img alt="newsletter" src="/newsletter/illustration-sign-up-desktop.svg" />
+			<picture >
+        <source srcset='/newsletter/illustration-sign-up-desktop.svg' media='(min-width: 768px)' class='max-h-96'/>
+				<img alt="newsletter" src="/newsletter/illustration-sign-up-mobile.svg" class='object-fill size-full'/>
 			</picture>
 		{:else}
 			<section
-				class="col-span-1 flex flex-col items-start justify-center px-8 pb-8 pt-4 max-w-[400px] gap-y-4"
+				class="col-span-1 flex flex-col items-start justify-center px-8 pb-8 pt-4 max-w-[400px] gap-y-4 order-first md:order-last"
 			>
 				<img src="/newsletter/icon-success.svg" alt="success" />
 				<h1 class='pt-4'>Thanks for subscribing!</h1>
@@ -72,18 +73,16 @@
 	}
 
 	main {
-		background-color: var(--dark-slate-grey);
 		color: var(--dark-slate-grey);
-		@apply min-h-screen flex flex-col items-center justify-center p-20;
+		@apply min-h-full flex flex-col items-center justify-start md:justify-center lg:p-20 md:p-8 md:bg-[var(--dark-slate-grey)];
 	}
 	p {
 		line-height: 1.4;
 		font-size: 14px;
 	}
 	h1 {
-		font-size: 50px;
 		line-height: 1;
-		@apply font-bold;
+		@apply font-bold md:text-[50px] text-4xl;
 	}
 	button {
 		color: var(--white);
@@ -122,13 +121,13 @@
 	}
 
 	ol {
-		@apply list-image-[url(newsletter/icon-list.svg)] list-inside min-w-full space-y-1;
+		@apply list-image-[url(newsletter/icon-list.svg)] list-outside min-w-full space-y-2;
 	}
 
 	ol li {
-		@apply relative;
+		@apply relative min-h-12;
 	}
 	ol li span {
-		@apply absolute pl-3;
+    @apply absolute text-base pl-3;
 	}
 </style>
