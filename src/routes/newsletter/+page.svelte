@@ -138,7 +138,7 @@
 	}
 
 	ol {
-		@apply min-w-full list-outside list-image-[url(newsletter/icon-list.svg)] space-y-3 md:space-y-1;
+		@apply min-w-full list-outside list-image-[url(/newsletter/icon-list.svg)] space-y-3 md:space-y-1;
 	}
 
 	ol li {
