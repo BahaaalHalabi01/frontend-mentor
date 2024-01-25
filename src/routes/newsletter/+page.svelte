@@ -100,7 +100,7 @@
 		font-size: 14px;
 	}
 	h1 {
-		@apply text-4xl font-bold leading-none md:text-[50px];
+		@apply text-4xl font-bold leading-none md:text-[54px];
 	}
 	button {
 		color: var(--white);
