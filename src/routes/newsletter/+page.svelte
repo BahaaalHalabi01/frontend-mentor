@@ -93,7 +93,7 @@
 
 	main {
 		color: var(--dark-slate-grey);
-		@apply flex min-h-full flex-col items-center justify-start md:justify-center md:bg-[var(--dark-slate-grey)] md:p-8 lg:p-20;
+		@apply flex min-h-full flex-col items-center justify-start md:justify-center md:bg-[var(--charcoal-grey)] md:p-8 lg:p-20;
 	}
 	p {
 		line-height: 1.4;
