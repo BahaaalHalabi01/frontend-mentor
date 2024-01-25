@@ -7,10 +7,11 @@
 
 @layer base {
 	html {
-		@apply min-h-screen h-screen;
+    min-height:100dvh;
+    height:100%;
 	}
 
 	body {
-		@apply contents;
+    @apply contents;
 	}
 }
