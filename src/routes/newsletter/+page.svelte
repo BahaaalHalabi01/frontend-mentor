@@ -16,7 +16,7 @@
 	>
 		{#if !form?.success}
 			<section
-				class=" order-last flex flex-col items-start justify-center gap-y-4 px-6 md:order-first md:pl-10 md:pr-16"
+				class=" order-last flex flex-col items-start justify-center gap-y-6 px-6 md:order-first md:pl-10 md:pr-16"
 			>
 				<h1>Stay updated!</h1>
 				<h2 class="max-w-[376px]">Join 60,000+ product managers receiving monthly updates on:</h2>
