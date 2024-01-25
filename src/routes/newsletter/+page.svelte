@@ -26,14 +26,15 @@
 					<li><span>And much more!</span></li>
 				</ol>
 				<form class="flex min-w-full flex-col gap-y-6" use:enhance target="_self" method="POST">
-					<label class="min-w-full">
-						<div class="flex justify-between pb-2 text-xs font-bold">
+					<div class="min-w-full">
+						<label class="flex justify-between pb-2 text-xs font-bold" for='email'>
 							<span class="block">Email address</span>
 							{#if form?.error && form?.error?.length > 0}
 								<span class="error">{form.error}</span>
 							{/if}
-						</div>
+						</label>
 						<input
+              id='email'
 							aria-errormessage={!form?.success ? form?.error : undefined}
 							aria-invalid={form?.success}
 							autocomplete="email"
@@ -42,7 +43,7 @@
 							class:error={form?.success === false}
 							placeholder={'email@company.com'}
 						/>
-					</label>
+					</div>
 					<button class="mt-auto flex h-14 w-full items-center justify-center rounded-md">
 						Subscribe to monthly newsletter
 					</button>
