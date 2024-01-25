@@ -7,6 +7,9 @@
 	}
 </script>
 
+<svelte:head>
+  <title>Newsletter in Svelte</title>
+</svelte:head>
 <main>
 	<div
 		class="mx-auto flex max-w-full grow flex-col justify-center gap-y-8 bg-white pb-8 md:min-h-fit md:max-w-fit md:grow-0 md:flex-row md:rounded-[32px] md:p-6"
@@ -120,13 +123,13 @@
 	}
 
 	.btn-success {
-		@apply mt-auto flex h-12 w-full items-center justify-center rounded-md text-sm outline-none hover:md:bg-[var(--tomato)] hover:md:shadow-[0_16px_40px_-8px_var(--tomato)] to-[var(--tomato)] from-[#ff527b] hover:bg-gradient-to-r;
+		@apply mt-auto flex h-12 w-full items-center justify-center rounded-md from-[#ff527b] to-[var(--tomato)] text-sm outline-none hover:bg-gradient-to-r hover:md:bg-[var(--tomato)] hover:md:shadow-[0_16px_40px_-8px_var(--tomato)];
 	}
 
-  button:focus-visible {
+	button:focus-visible {
 		box-shadow: 0 16px 40px -8px var(--tomato);
 
-		@apply to-[var(--tomato)] from-[#ff527b] bg-gradient-to-r outline-none;
+		@apply bg-gradient-to-r from-[#ff527b] to-[var(--tomato)] outline-none;
 	}
 
 	input.error {
