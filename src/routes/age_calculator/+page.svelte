@@ -1,41 +1,96 @@
-<script>
-	let date = $state({ years: 38, months: 3, days: 26 });
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	import type { FormEventHandler } from 'svelte/elements';
+	let { form } = $props();
+
+	$inspect(form);
+
+	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+		const d = new FormData(e.currentTarget);
+
+		const fields = ['day', 'month', 'year'];
+
+		for (const field of fields) {
+			let f = window.document.getElementById(field) as HTMLInputElement | null;
+
+			if (!f) continue;
+			f.value = d.get(field)?.toString() ?? '';
+		}
+	};
 </script>
 
 <svelte:head>
 	<title>Calculator App in Svelte</title>
 </svelte:head>
 <main>
-	<div class=" roundedBr bg-[var(--white)] px-6 py-12">
+	<form
+		class=" roundedBr mx-auto bg-[var(--white)] px-6 py-12 md:max-w-[850px] md:px-16"
+		method="POST"
+		on:submit|preventDefault={handleSubmit}
+		use:enhance
+	>
 		<div
-			class="grid grid-cols-3 gap-x-4 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--smokey-grey)]"
+			class="grid max-w-fit grid-cols-3 gap-x-4 text-xs font-semibold uppercase text-[var(--smokey-grey)] md:gap-x-8 md:text-base"
 		>
-			<label>
+			<label class:error={form?.errors?.day?.length}>
 				Day
-				<input type="number" class="mt-1" value="24" autocomplete="bday-day" />
+				<input
+					id="day"
+					name="day"
+					type="number"
+					autocomplete="bday-day"
+					placeholder="DD"
+					aria-placeholder="24"
+					role="textbox"
+				/>
+				{#if form?.errors?.day?.length}<span>{form?.errors?.day[0]}</span>
+				{/if}
 			</label>
-			<label>
+			<label class:error={form?.errors?.month?.length}>
 				Month
-				<input type="number" class="mt-1" value="09" autocomplete="bday-month" />
+				<input
+					name="month"
+					id="month"
+					type="number"
+					autocomplete="bday-month"
+					aria-placeholder="09"
+					role="textbox"
+					placeholder="MM"
+				/>
+				{#if form?.errors?.month?.length}<span>{form?.errors?.month[0]}</span>
+				{/if}
 			</label>
-			<label>
+			<label class:error={form?.errors?.year?.length}>
 				Year
-				<input type="number" class="mt-1" value="1984" autocomplete="bday-year" />
+				<input
+					type="number"
+					name="year"
+					id="year"
+					autocomplete="bday-year"
+					aria-placeholder="1984"
+					role="textbox"
+					placeholder="YYYY"
+				/>
+				{#if form?.errors?.year?.length}<span>{form?.errors?.year[0]}</span>
+				{/if}
 			</label>
 		</div>
-		<div class="flex items-center justify-center py-8">
+		<div class="flex items-center justify-center py-8 md:py-0">
 			<hr />
-			<button class="flex items-center justify-center rounded-full bg-[var(--purple)] p-4">
-				<img src="/age_calculator/icon-arrow.svg" alt="below" class="min-w-7" />
+			<button
+				class="flex items-center justify-center rounded-full bg-[var(--purple)] p-4 hover:bg-[var(--off-black)] md:p-6"
+			>
+				<img src="/age_calculator/icon-arrow.svg" alt="below" class="min-w-7 md:min-w-12" />
 			</button>
-			<hr />
+			<hr class="block md:hidden" />
 		</div>
-		<div class="flex flex-col gap-y-2 pt-2 text-5xl font-extrabold italic">
-			<p><strong>{date.years}</strong> years</p>
-			<p><strong>{date.months}</strong> months</p>
-			<p><strong>{date.days}</strong> days</p>
+		<div class="flex flex-col gap-y-2 pt-2 text-5xl font-extrabold italic md:text-8xl">
+			<p><strong>{form?.age?.years ?? '- -'}</strong> years</p>
+			<p><strong>{form?.age?.months ?? '- - '}</strong> months</p>
+			<p><strong>{form?.age?.days ?? '- -'}</strong> days</p>
 		</div>
-	</div>
+	</form>
 </main>
 
 <style lang="scss">
@@ -51,15 +106,35 @@
 	main {
 		background-color: var(--off-white);
 		font-family: 'poppins', sans-serif;
-		@apply min-h-full px-4 pt-24;
+		@apply min-h-full px-4 pt-24 md:pt-36;
 	}
 
 	input {
 		-moz-appearance: textfield;
 		appearance: textfield;
 		color: var(--off-black);
-		font-size: 18px;
-		@apply h-[50px] max-w-full rounded-md border border-[var(--light-grey)] px-3 text-start shadow-inner;
+		@apply mt-1 block h-[50px] max-w-full rounded-md border border-[var(--light-grey)] 
+    px-3 text-start text-[18px] shadow-inner placeholder:text-[var(--smokey-grey)] md:mt-2 md:h-16 md:max-w-40 md:px-6 md:text-3xl md:placeholder:text-3xl;
+	}
+
+	label {
+		@apply max-w-40 tracking-[0.2em];
+	}
+
+	label.error input {
+		@apply border-[var(--light-red)];
+	}
+
+	label.error {
+		@apply text-[var(--light-red)];
+	}
+
+	label.error span {
+		@apply block pt-2 text-xs font-normal  normal-case italic tracking-normal;
+	}
+
+	input:focus-visible {
+		@apply border-2 border-[var(--off-black)] outline-none;
 	}
 
 	strong {
