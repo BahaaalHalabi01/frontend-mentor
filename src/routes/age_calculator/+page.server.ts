@@ -17,7 +17,42 @@ export const actions = {
 
 		const result = schema_age_calculator.safeParse(date);
 
-		if (!result.success) return fail(400,{ errors: result.error.formErrors.fieldErrors });
-		return { success: true, age: { years: 24, months: 1, days: 5 } };
+		if (!result.success)
+			return fail(400, {
+				errors: result.error.formErrors.fieldErrors,
+				year,
+				day,
+				month
+			});
+
+		const birth = new Date(date.year as number, date.month as number, date.day as number);
+		const today = new Date();
+
+		let years = today.getFullYear() - birth.getFullYear();
+		let months = today.getMonth() - birth.getMonth();
+		let days = today.getDate() - birth.getDate();
+
+		if (months < 0 || (months === 0 && today.getDate() < birth.getDate())) {
+			years--;
+			months += 12;
+		}
+
+		if (days < 0) {
+			months--;
+			const prevMonthDays = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+			days += prevMonthDays;
+		}
+
+		return {
+			success: true,
+			year,
+			day,
+			month,
+			age: {
+				years,
+				months,
+				days 
+			}
+		};
 	}
 } satisfies Actions;

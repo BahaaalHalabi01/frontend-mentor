@@ -1,23 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { FormEventHandler } from 'svelte/elements';
 	let { form } = $props();
 
 	$inspect(form);
-
-	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault()
-		const d = new FormData(e.currentTarget);
-
-		const fields = ['day', 'month', 'year'];
-
-		for (const field of fields) {
-			let f = window.document.getElementById(field) as HTMLInputElement | null;
-
-			if (!f) continue;
-			f.value = d.get(field)?.toString() ?? '';
-		}
-	};
 </script>
 
 <svelte:head>
@@ -27,7 +12,6 @@
 	<form
 		class=" roundedBr mx-auto bg-[var(--white)] px-6 py-12 md:max-w-[850px] md:px-16"
 		method="POST"
-		on:submit|preventDefault={handleSubmit}
 		use:enhance
 	>
 		<div
@@ -36,8 +20,9 @@
 			<label class:error={form?.errors?.day?.length}>
 				Day
 				<input
-					id="day"
+          value={form?.day ?? ''}
 					name="day"
+					id="day"
 					type="number"
 					autocomplete="bday-day"
 					placeholder="DD"
@@ -51,6 +36,7 @@
 				Month
 				<input
 					name="month"
+          value={form?.month ?? ''}
 					id="month"
 					type="number"
 					autocomplete="bday-month"
@@ -66,6 +52,7 @@
 				<input
 					type="number"
 					name="year"
+          value={form?.year ?? ''}
 					id="year"
 					autocomplete="bday-year"
 					aria-placeholder="1984"

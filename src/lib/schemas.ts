@@ -32,13 +32,13 @@ const schema_age_calculator = z
 	})
 	.superRefine((args, ctx) => {
 		if (args.month && args.day && args.year) {
-			const date = new Date(args.year, args.month, args.day);
+			const date = new Date(args.year, args.month -1);
 			const days = getDaysInMonth(date);
 
 			if ( args.day > days)
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
-					message: valid_error_message('day'),
+					message: valid_error_message('date'),
 					path: ['day']
 				});
 
