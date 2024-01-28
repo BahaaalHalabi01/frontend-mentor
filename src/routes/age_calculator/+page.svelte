@@ -165,7 +165,7 @@
 	}
 
 	input:focus-visible {
-		@apply border-2 border-[var(--off-black)] outline-none;
+		@apply border-2 border-[var(--purple)] outline-none;
 	}
 
 	strong {
