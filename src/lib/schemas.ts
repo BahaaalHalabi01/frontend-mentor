@@ -32,7 +32,7 @@ const schema_age_calculator = z
 	})
 	.superRefine((args, ctx) => {
 		if (args.month && args.day && args.year) {
-			const date = new Date(args.year, args.month -1);
+			const date = new Date(args.year, args.month -1,args.day);
 			const days = getDaysInMonth(date);
 
 			if ( args.day > days)

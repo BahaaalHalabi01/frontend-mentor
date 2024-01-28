@@ -25,7 +25,7 @@ export const actions = {
 				month
 			});
 
-		const birth = new Date(date.year as number, date.month as number, date.day as number);
+		const birth = new Date(date.year as number, (date.month as number) - 1, date.day as number);
 		const today = new Date();
 
 		let years = today.getFullYear() - birth.getFullYear();
@@ -33,7 +33,7 @@ export const actions = {
 		let days = today.getDate() - birth.getDate();
 
 		if (months < 0 || (months === 0 && today.getDate() < birth.getDate())) {
-			years--;
+			if (years !== 0) years--;
 			months += 12;
 		}
 
@@ -51,7 +51,7 @@ export const actions = {
 			age: {
 				years,
 				months,
-				days 
+				days
 			}
 		};
 	}

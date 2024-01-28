@@ -1,8 +1,50 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	let { form } = $props();
+	let age = $state<{ days?: number; months?: number; years?: number }>({
+		days: undefined,
+		months: undefined,
+		years: undefined
+	});
 
 	$inspect(form);
+	function isMany(e?: number) {
+		if (e === undefined) return 's';
+		if (e && e > 1) return 's';
+		if (e === 0) return 's';
+		return '';
+	}
+
+	$effect(() => {
+		if (form?.success) {
+			const startTime = performance.now();
+			age = { months: 0, days: 0, years: 0 };
+			const duration = 500;
+
+			requestAnimationFrame((t: number) =>
+				updateValue(t, startTime, form?.age as Required<typeof age>, duration, age)
+			);
+		}
+	});
+
+	const easingFunction = (t: number) => t;
+
+	function updateValue(
+		timestamp: number,
+		startTime: number,
+		endV: Required<typeof age>,
+		duration: number,
+		v: typeof age
+	) {
+		const elapsedTime = timestamp - startTime;
+		const progress = Math.min(elapsedTime / duration, 1);
+		v.years = Math.floor(easingFunction(progress) * endV?.years);
+		v.days = Math.floor(easingFunction(progress) * endV?.days);
+		v.months = Math.floor(easingFunction(progress) * endV?.months);
+		if (progress < 1) {
+			requestAnimationFrame((t: number) => updateValue(t, startTime, endV, duration, v));
+		}
+	}
 </script>
 
 <svelte:head>
@@ -20,7 +62,7 @@
 			<label class:error={form?.errors?.day?.length}>
 				Day
 				<input
-          value={form?.day ?? ''}
+					value={form?.day ?? ''}
 					name="day"
 					id="day"
 					type="number"
@@ -36,7 +78,7 @@
 				Month
 				<input
 					name="month"
-          value={form?.month ?? ''}
+					value={form?.month ?? ''}
 					id="month"
 					type="number"
 					autocomplete="bday-month"
@@ -52,7 +94,7 @@
 				<input
 					type="number"
 					name="year"
-          value={form?.year ?? ''}
+					value={form?.year ?? ''}
 					id="year"
 					autocomplete="bday-year"
 					aria-placeholder="1984"
@@ -73,9 +115,11 @@
 			<hr class="block md:hidden" />
 		</div>
 		<div class="flex flex-col gap-y-2 pt-2 text-5xl font-extrabold italic md:text-8xl">
-			<p><strong>{form?.age?.years ?? '- -'}</strong> years</p>
-			<p><strong>{form?.age?.months ?? '- - '}</strong> months</p>
-			<p><strong>{form?.age?.days ?? '- -'}</strong> days</p>
+			<p>
+				<strong>{age.years ?? '- -'}</strong> year{isMany(form?.age?.years)}
+			</p>
+			<p><strong>{age.months ?? '- - '}</strong> month{isMany(form?.age?.months)}</p>
+			<p><strong>{age.days ?? '- -'}</strong> day{isMany(form?.age?.days)}</p>
 		</div>
 	</form>
 </main>
