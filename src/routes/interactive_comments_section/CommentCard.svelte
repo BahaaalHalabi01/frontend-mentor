@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { current_user } from './store';
-	import type { TReply, TComment } from './types';
+	import { current_user } from './user';
+	import type { TReply, TComment } from './user';
 
 	let { comment, replies } = $props<{
 		comment: TComment;
@@ -39,7 +39,7 @@
 				<button class="increment">
 					<img src="/interactive_comments/icon-plus.svg" alt="+" />
 				</button>
-				<span class="font-semibold text-[var(--moderate-blue)] px-1.5 md:px-0">
+				<span class="px-1.5 font-semibold text-[var(--moderate-blue)] md:px-0">
 					{params.score}
 				</span>
 				<button class="increment">
@@ -73,7 +73,10 @@
 				<span class="text-[var(--grayish-blue)]" aria-label="created at">{params.createdAt}</span>
 				<div class="hidden md:block">{@render actions(params.user.username)}</div>
 			</div>
-			<p aria-label="comment" class="pr-3 text-base font-normal text-[var(--grayish-blue)] leading-snug md:leading-loose">
+			<p
+				aria-label="comment"
+				class="pr-3 text-base font-normal leading-snug text-[var(--grayish-blue)] md:leading-loose"
+			>
 				{#if (params as TReply).replyingTo}
 					<span class="font-bold text-[var(--moderate-blue)]">
 						@{(params as TReply).replyingTo}</span

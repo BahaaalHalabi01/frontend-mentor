@@ -1,6 +1,9 @@
 <script lang="ts">
 	import CommentCard from './CommentCard.svelte';
 	import data from './data.json';
+	import { current_user } from './user';
+
+	current_user.subscribe(function () {});
 </script>
 
 <svelte:head>
@@ -21,6 +24,27 @@
 				replies={item.replies}
 			/>
 		{/each}
+		<div class="flex min-w-full flex-col gap-x-6 rounded-lg bg-white p-4 shadow md:flex-row md:p-6">
+			<textarea
+				class=" rounded-lg border border-gray-300 px-6 py-2 placeholder:text-[var(--grayish-blue)] resize-none"
+				placeholder="Add a comment..."
+				aria-label="New Comment"
+        rows="3"
+        maxlength="1000"
+        spellcheck="true"
+				title="add a comment"
+			/>
+			<div class="flex w-full items-center justify-between pt-4">
+				<img
+					src={`/interactive_comments/${$current_user?.image?.webp}`}
+					alt={$current_user?.username}
+					width={30}
+				/>
+        <button class='uppercase bg-[var(--moderate-blue)] text-white font-medium px-6 rounded-md py-2.5'>
+          Send
+        </button>
+			</div>
+		</div>
 	</div>
 </main>
 
@@ -41,7 +65,7 @@
 	main {
 		font-family: 'Rubik', sans-serif;
 		background-color: var(--light-gray);
-		@apply flex min-h-full flex-col items-center p-4 md:py-20 md:px-8;
+		@apply flex min-h-full flex-col items-center p-4 md:px-8 md:py-20;
 	}
 
 	@font-face {
