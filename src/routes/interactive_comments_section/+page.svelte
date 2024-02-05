@@ -1,16 +1,27 @@
-<script>
-  import CommentCard from './CommentCard.svelte'
+<script lang="ts">
+	import CommentCard from './CommentCard.svelte';
+	import data from './data.json';
 </script>
 
 <svelte:head>
 	<title>Interactive Comments Section</title>
 </svelte:head>
 
-<main> 
-<div class='max-w-3xl w-full'>
-  <CommentCard/>
-</div>
-
+<main>
+	<div class="flex w-full max-w-[728px] flex-col gap-y-4">
+		{#each data.comments as item}
+			<CommentCard
+				comment={{
+					createdAt: item.createdAt,
+					content: item.content,
+					score: item.score,
+					user: item.user,
+					id: item.id
+				}}
+				replies={item.replies}
+			/>
+		{/each}
+	</div>
 </main>
 
 <style>
@@ -29,15 +40,16 @@
 
 	main {
 		font-family: 'Rubik', sans-serif;
-    background-color:var(--light-gray);
-		@apply min-h-full pt-12 md:pt-20 flex flex-col items-center ;
+		background-color: var(--light-gray);
+		@apply flex min-h-full flex-col items-center p-4 md:py-20 md:px-8;
 	}
 
 	@font-face {
 		font-family: Rubik;
-		font-weight: 400 500 700;
+		src:
+			local('Rubik'),
+			url('/fonts/rubik/Rubik-VariableFont_wght.ttf') format('truetype');
+		font-weight: 1 1000;
 		font-style: normal;
-		src: local('Rubik'),
-			urlurl('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
 	}
 </style>
