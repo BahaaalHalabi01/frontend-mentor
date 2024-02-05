@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import CommentCard from './CommentCard.svelte';
 	import data from './data.json';
 	import { current_user } from './user';
@@ -24,27 +25,35 @@
 				replies={item.replies}
 			/>
 		{/each}
-		<div class="flex min-w-full flex-col gap-x-6 rounded-lg bg-white p-4 shadow md:flex-row md:p-6">
+		<form
+			class="flex min-w-full flex-wrap gap-x-6 rounded-lg bg-white p-4 shadow md:flex-row md:p-6 gap-y-4 items-center"
+      method='POST'
+      use:enhance
+		>
 			<textarea
-				class=" rounded-lg border border-gray-300 px-6 py-2 placeholder:text-[var(--grayish-blue)] resize-none"
+				class=" min-w-full resize-none rounded-lg border border-gray-300 px-6 py-2 placeholder:text-[var(--grayish-blue)]"
 				placeholder="Add a comment..."
 				aria-label="New Comment"
-        rows="3"
-        maxlength="1000"
-        spellcheck="true"
+				rows="3"
+				maxlength="1000"
+				spellcheck="true"
 				title="add a comment"
 			/>
-			<div class="flex w-full items-center justify-between pt-4">
-				<img
-					src={`/interactive_comments/${$current_user?.image?.webp}`}
-					alt={$current_user?.username}
-					width={30}
-				/>
-        <button class='uppercase bg-[var(--moderate-blue)] text-white font-medium px-6 rounded-md py-2.5'>
-          Send
-        </button>
-			</div>
-		</div>
+			<!-- <div class="flex w-full items-center justify-between pt-4"> -->
+			<img
+				src={`/interactive_comments/${$current_user?.image?.webp}`}
+				alt={$current_user?.username}
+				class="inline-block h-fit"
+				width={30}
+        height={30}
+			/>
+			<button
+				class="inline-flex max-w-fit rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white ml-auto"
+			>
+				Send
+			</button>
+			<!-- </div> -->
+		</form>
 	</div>
 </main>
 
@@ -65,7 +74,7 @@
 	main {
 		font-family: 'Rubik', sans-serif;
 		background-color: var(--light-gray);
-		@apply flex min-h-full flex-col items-center p-4 md:px-8 md:py-20;
+		@apply flex min-h-full flex-col items-center px-4 py-8 md:px-8 md:py-20;
 	}
 
 	@font-face {

@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 
+
 type TUser = {
 	username: string;
 	image: {
@@ -22,7 +23,7 @@ type TReply = TBase & {
 	replyingTo: string;
 };
 
-export type { TReply, TComment };
+export type { TReply, TComment ,TUser};
 
 
 //load a default user
