@@ -2,21 +2,61 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import CommentCard from './CommentCard.svelte';
-  import {createUser} from './user.svelte.ts'
-
+	import { createUser } from './user.svelte.ts';
+	import { item_id } from './replying.svelte';
 
 	const { data } = $props<{ data: PageData }>();
 
-  const {user} = createUser()
+	const { user } = createUser();
 
+	type TTextInput = {
+		replying?: boolean;
+		id?: string;
+	};
+
+  $inspect(item_id)
 </script>
 
 <svelte:head>
 	<title>Interactive Comments Section</title>
 </svelte:head>
 
+{#snippet textInput(input:TTextInput)}
+	<div
+		class="flex min-w-full flex-wrap gap-y-4 rounded-lg bg-white p-4 shadow md:flex-row md:items-start md:gap-x-4 md:p-6"
+	>
+		<img
+			src={`/interactive_comments/${user.image}`}
+			alt={user.username}
+			class="inline-flex h-fit"
+			width={40}
+		/>
+		{#if input.id === item_id}
+			<input class="hidden" name="id" value={input.id} />
+			<input class="hidden" name="replyingTo" value={input.replying} />
+		{/if}
+
+		<textarea
+			class=" inline-flex grow resize-none rounded-lg border border-gray-300 px-6 py-2 placeholder:text-[var(--grayish-blue)]"
+			placeholder={input ? 'Add a reply...' : 'Add a comment...'}
+			aria-label={input ? 'New Reply' : 'New Comment'}
+			rows="3"
+			name="comment"
+			maxlength="1000"
+			spellcheck="true"
+			title={input ? 'add a reply' : 'add a comment'}
+		/>
+
+		<button
+			class="ml-auto inline-flex max-w-fit rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white hover:opacity-30"
+		>
+			{input ? 'Reply' : 'Send'}
+		</button>
+	</div>
+{/snippet}
+
 <main>
-	<div class="flex w-full max-w-[728px] flex-col gap-y-4">
+	<form class="flex w-full max-w-[728px] flex-col gap-y-4" method="POST" use:enhance>
 		{#each data.data as item}
 			<CommentCard
 				comment={{
@@ -26,39 +66,13 @@
 					user: item.users,
 					id: item.comments.id
 				}}
+				{textInput}
 				replies={item.comments.replies ?? []}
 			/>
 		{/each}
-		<form
-			class="flex min-w-full flex-wrap items-center gap-x-6 gap-y-4 rounded-lg bg-white p-4 shadow md:flex-row md:p-6"
-			method="POST"
-			use:enhance
-		>
-			<textarea
-				class=" min-w-full resize-none rounded-lg border border-gray-300 px-6 py-2 placeholder:text-[var(--grayish-blue)]"
-				placeholder="Add a comment..."
-				aria-label="New Comment"
-				rows="3"
-				maxlength="1000"
-				spellcheck="true"
-				title="add a comment"
-			/>
-			<!-- <div class="flex w-full items-center justify-between pt-4"> -->
-			<img
-				src={`/interactive_comments/${user.image}`}
-				alt={user.username}
-				class="inline-block h-fit"
-				width={30}
-				height={30}
-			/>
-			<button
-				class="ml-auto inline-flex max-w-fit rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white"
-			>
-				Send
-			</button>
-			<!-- </div> -->
-		</form>
-	</div>
+
+		{@render textInput({ replying: false, })}
+	</form>
 </main>
 
 <style>
@@ -79,6 +93,10 @@
 		font-family: 'Rubik', sans-serif;
 		background-color: var(--light-gray);
 		@apply flex min-h-full flex-col items-center px-4 py-8 md:px-8 md:py-20;
+	}
+
+	textarea {
+		@apply outline-none focus:border-[var(--moderate-blue)] active:border-[var(--moderate-blue)];
 	}
 
 	@font-face {
