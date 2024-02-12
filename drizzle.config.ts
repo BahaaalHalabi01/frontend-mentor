@@ -1,14 +1,13 @@
 import type { Config } from 'drizzle-kit';
-import { loadEnv } from 'vite';
-
-process.env = { ...process.env, ...loadEnv(process.env.NODE_ENV!, process.cwd()) };
+import * as dotenv from 'dotenv';
+dotenv.config({path:'./.env.local'});
 
 export default {
-	schema: './src/db/schema.ts',
+	schema: './src/lib/server/db/schema.ts',
 	out: './drizzle',
-	driver: 'turso',
+	driver: 'libsql',
 	dbCredentials: {
-		url: process.env.VITE_TURSO_DB_URL!,
-    authToken:process.env.VITE_TURSO_DB_AUTH_TOKEN
+		url: process.env.DB_URL!,
+		// authToken: process.env.DB_AUTH_TOKEN
 	}
 } satisfies Config;
