@@ -14,7 +14,7 @@
 		id?: string;
 	};
 
-  $inspect(item_id)
+
 </script>
 
 <svelte:head>

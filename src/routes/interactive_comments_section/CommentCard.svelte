@@ -23,14 +23,12 @@
 			currentTarget: EventTarget & HTMLButtonElement;
 		}
 	) {
-		const replyingTo = event.currentTarget.dataset.replyingTo ?? '';
-		const id = event.currentTarget.dataset.id ?? '';
+		const replyingTo = event.currentTarget.dataset.replyingto;
+		const id = event.currentTarget.dataset.id;
 
-    console.log(id,replyingTo)
-
-		replying.open = !replying.open;
-		replying.replyingTo = replying.replyingTo ? '' : replyingTo;
-		replying.id = replying.id ? '' : id;
+		replying.open = !replyingTo && !replying.replyingTo ? !replying.open : true;
+		replying.replyingTo = replyingTo;
+		replying.id = id;
 	}
 
 	type TActions = {
@@ -57,7 +55,7 @@
 			type="button"
 			class=" btn text-[var(--moderate-blue)]"
 			onclick={handleReply}
-			data-replyingTo={replyingTo}
+			data-replyingto={replyingTo}
 			data-id={id}
 		>
 			<img src="/interactive_comments/icon-reply.svg" alt="goback" class="" />
