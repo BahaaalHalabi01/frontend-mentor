@@ -7,7 +7,6 @@
 	}>();
 
 	const { user } = createUser();
-
 </script>
 
 {#snippet actions(username:string)}
@@ -71,7 +70,7 @@
 				</span>
 
 				<span class="text-[var(--grayish-blue)]" aria-label="created at">{params.createdAt}</span>
-				<div class="hidden md:block">{@render actions(params.user.username)}</div>
+				<div class="ml-auto hidden md:block">{@render actions(params.user.username)}</div>
 			</div>
 			<p
 				aria-label="comment"
