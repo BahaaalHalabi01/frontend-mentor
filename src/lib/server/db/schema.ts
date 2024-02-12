@@ -1,4 +1,4 @@
-import type { TReply } from '$src/routes/interactive_comments_section/user';
+import type { TReply } from '$src/routes/interactive_comments_section/user.svelte';
 import { relations } from 'drizzle-orm';
 import { integer, sqliteTable, text, blob } from 'drizzle-orm/sqlite-core';
 

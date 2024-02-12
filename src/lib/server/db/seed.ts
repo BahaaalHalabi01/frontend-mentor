@@ -4,10 +4,7 @@ import { createClient } from '@libsql/client';
 
 const data = {
 	currentUser: {
-		image: {
-			png: './images/avatars/image-juliusomo.png',
-			webp: './images/avatars/image-juliusomo.webp'
-		},
+		image: './images/avatars/image-juliusomo.webp',
 		username: 'juliusomo'
 	},
 	comments: [
@@ -18,10 +15,7 @@ const data = {
 			createdAt: '1 month ago',
 			score: 12,
 			user: {
-				image: {
-					png: './images/avatars/image-amyrobson.png',
-					webp: './images/avatars/image-amyrobson.webp'
-				},
+				image: './images/avatars/image-amyrobson.webp',
 				username: 'amyrobson'
 			},
 			replies: []
@@ -33,10 +27,7 @@ const data = {
 			createdAt: '2 weeks ago',
 			score: 5,
 			user: {
-				image: {
-					png: './images/avatars/image-maxblagun.png',
-					webp: './images/avatars/image-maxblagun.webp'
-				},
+				image: './images/avatars/image-maxblagun.webp',
 				username: 'maxblagun'
 			},
 			replies: [
@@ -48,10 +39,7 @@ const data = {
 					score: 4,
 					replyingTo: 'maxblagun',
 					user: {
-						image: {
-							png: './images/avatars/image-ramsesmiron.png',
-							webp: './images/avatars/image-ramsesmiron.webp'
-						},
+						image: './images/avatars/image-ramsesmiron.webp',
 						username: 'ramsesmiron'
 					}
 				},
@@ -63,10 +51,7 @@ const data = {
 					score: 2,
 					replyingTo: 'ramsesmiron',
 					user: {
-						image: {
-							png: './images/avatars/image-juliusomo.png',
-							webp: './images/avatars/image-juliusomo.webp'
-						},
+						image: './images/avatars/image-juliusomo.webp',
 						username: 'juliusomo'
 					}
 				}
@@ -83,7 +68,7 @@ async function seed() {
 	const db = drizzle(turso);
 
 	async function seedUsers() {
-		const user = { image: data.currentUser.image.webp, username: data.currentUser.username };
+		const user = { image: data.currentUser.image, username: data.currentUser.username };
 
 		const user_map: Map<string, typeof user> = new Map();
 
@@ -93,7 +78,7 @@ async function seed() {
 			if (c.user) {
 				user_map.set(c.user.username, {
 					username: c.user.username,
-					image: c.user.image.webp
+					image: c.user.image
 				});
 			}
 			c.replies.forEach(() => {});
@@ -105,20 +90,23 @@ async function seed() {
 	}
 
 	async function seedComments() {
-		return  db.insert(comments).values(
+		return db.insert(comments).values(
 			data.comments.map((c) => ({
 				id: c.id,
-        createdAt:c.createdAt,
+				createdAt: c.createdAt,
 				content: c.content,
 				score: c.score,
 				userId: c.user.username,
-        replies:c.replies
+				replies: c.replies
 			}))
 		);
 	}
 
 	// console.log(seedUsers());
-	// console.log(await seedComments());
+	console.log(await seedComments());
+  //
+  
+
 
 	console.debug('success');
 }

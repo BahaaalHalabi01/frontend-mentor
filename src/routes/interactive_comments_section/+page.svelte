@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import type { PageData } from './$types';
 	import CommentCard from './CommentCard.svelte';
-	import data from './data.json';
-	import { current_user } from './user';
+  import {createUser} from './user.svelte.ts'
 
-	current_user.subscribe(function () {});
+
+	const { data } = $props<{ data: PageData }>();
+
+  const {user} = createUser()
+
 </script>
 
 <svelte:head>
@@ -13,22 +17,22 @@
 
 <main>
 	<div class="flex w-full max-w-[728px] flex-col gap-y-4">
-		{#each data.comments as item}
+		{#each data.data as item}
 			<CommentCard
 				comment={{
-					createdAt: item.createdAt,
-					content: item.content,
-					score: item.score,
-					user: item.user,
-					id: item.id
+					createdAt: item.comments.createdAt ?? '',
+					content: item.comments.content ?? '',
+					score: item.comments.score ?? 0,
+					user: item.users,
+					id: item.comments.id
 				}}
-				replies={item.replies}
+				replies={item.comments.replies ?? []}
 			/>
 		{/each}
 		<form
-			class="flex min-w-full flex-wrap gap-x-6 rounded-lg bg-white p-4 shadow md:flex-row md:p-6 gap-y-4 items-center"
-      method='POST'
-      use:enhance
+			class="flex min-w-full flex-wrap items-center gap-x-6 gap-y-4 rounded-lg bg-white p-4 shadow md:flex-row md:p-6"
+			method="POST"
+			use:enhance
 		>
 			<textarea
 				class=" min-w-full resize-none rounded-lg border border-gray-300 px-6 py-2 placeholder:text-[var(--grayish-blue)]"
@@ -41,14 +45,14 @@
 			/>
 			<!-- <div class="flex w-full items-center justify-between pt-4"> -->
 			<img
-				src={`/interactive_comments/${$current_user?.image?.webp}`}
-				alt={$current_user?.username}
+				src={`/interactive_comments/${user.image}`}
+				alt={user.username}
 				class="inline-block h-fit"
 				width={30}
-        height={30}
+				height={30}
 			/>
 			<button
-				class="inline-flex max-w-fit rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white ml-auto"
+				class="ml-auto inline-flex max-w-fit rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white"
 			>
 				Send
 			</button>

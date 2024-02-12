@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { current_user } from './user';
-	import type { TReply, TComment } from './user';
+	import { type TComment, createUser, type TReply } from './user.svelte';
 
 	let { comment, replies } = $props<{
 		comment: TComment;
 		replies: TReply[];
 	}>();
 
-	current_user.subscribe(function () {});
+	const { user } = createUser();
+
 </script>
 
 {#snippet actions(username:string)}
-	{#if $current_user?.username === username}
+	{#if user?.username === username}
 		<div class="ml-auto flex gap-x-6">
 			<button class="btn text-[var(--soft-red)] hover:bg-red-300">
 				<img src="/interactive_comments/icon-delete.svg" alt="delete" class="inline-flex pr-1.5" />
@@ -54,7 +54,7 @@
 		<div class="flex grow flex-col gap-y-3">
 			<div class="flex items-center gap-x-4">
 				<img
-					src={`/interactive_comments/${params.user.image.webp}`}
+					src={`/interactive_comments/${params.user.image}`}
 					alt={params.user.username}
 					width={30}
 				/>
@@ -62,7 +62,7 @@
 					class="flex items-end gap-x-2 font-bold text-[var(--grayish-blue)]"
 					aria-label="username"
 					>{params.user.username}
-					{#if $current_user?.username === params.user.username}
+					{#if user?.username === params.user.username}
 						<span
 							class="flex h-fit items-center justify-center rounded-sm bg-[var(--moderate-blue)] p-1 text-xs font-semibold leading-none text-white"
 							>you</span
