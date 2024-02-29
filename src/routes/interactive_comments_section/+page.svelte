@@ -1,18 +1,22 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { PageData } from './$types';
+	import type { PageData, ActionData } from './$types';
 	import CommentCard from './CommentCard.svelte';
 	import { createUser } from './user.svelte.ts';
-	// import { item_id } from './replying.svelte';
 
-	const { data } = $props<{ data: PageData }>();
+	const { data, form } = $props<{ data: PageData; form: ActionData }>();
 
 	const { user } = createUser();
 
 	type TTextInput = {
-		replying?: boolean;
+		replyingTo?: string;
 		id?: string;
+    commentId?:string
 	};
+
+	if (form?.success) {
+		alert('added new comment');
+	}
 </script>
 
 <svelte:head>
@@ -21,7 +25,7 @@
 
 {#snippet textInput(input:TTextInput)}
 	<div
-		class="flex min-w-full flex-wrap gap-y-4 rounded-lg bg-white px-2 py-4 shadow md:flex-row md:items-start md:gap-x-4 md:p-6 md:gap-x-4"
+		class="flex min-w-full flex-wrap gap-y-4 rounded-lg bg-white px-2 py-4 shadow md:flex-row md:items-start md:gap-x-4 md:p-6"
 	>
 		<div class="inline-flex grow gap-x-1 md:gap-x-4">
 			<img
@@ -42,12 +46,12 @@
 				title={input ? 'add a reply' : 'add a comment'}
 			/>
 		</div>
-		<input class="hidden" name="id" value={input.id} />
-		<input class="hidden" name="replyingTo" value={input.replying} />
+		<input class="hidden" name="id" value={input.id ?? ''} />
+		<input class="hidden" name="replyingTo" value={input.replyingTo ?? ''} />
 		<button
 			class="ml-auto inline-flex max-w-fit basis-auto flex-wrap rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white hover:opacity-30"
 		>
-			{input.replying ? 'Reply' : 'Send'}
+			{input.replyingTo ? 'Reply' : 'Send'}
 		</button>
 	</div>
 {/snippet}
@@ -62,7 +66,7 @@
 						content: item.comments.content ?? '',
 						score: item.comments.score ?? 0,
 						user: item.users,
-						id: item.comments.id
+						id: item.comments.id,
 					}}
 					{textInput}
 					replies={item.comments.replies ?? []}

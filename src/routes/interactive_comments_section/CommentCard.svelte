@@ -2,12 +2,11 @@
 	import type { Snippet } from 'svelte';
 	import { type TComment, createUser, type TReply } from './user.svelte';
 	import type { TReplying } from './replying.svelte';
-	// import { item_id ,setId} from './replying.svelte';
 
 	let { comment, replies, textInput } = $props<{
 		comment: TComment;
 		replies: TReply[];
-		textInput: Snippet<{ replying?: boolean; id?: string }>;
+		textInput: Snippet<{ replyingTo?: string; id?: string; commentId?: string }>;
 	}>();
 
 	let replying = $state<TReplying>({
@@ -17,6 +16,7 @@
 	});
 
 	const { user } = createUser();
+	const commentId = comment.id;
 
 	function handleReply(
 		event: MouseEvent & {
@@ -26,9 +26,18 @@
 		const replyingTo = event.currentTarget.dataset.replyingto;
 		const id = event.currentTarget.dataset.id;
 
-		replying.open = !replyingTo && !replying.replyingTo ? !replying.open : true;
-		replying.replyingTo = replyingTo;
-		replying.id = id;
+		if (replyingTo) {
+			const open = replyingTo === replying.replyingTo ? !replying.open : true;
+			replying = {
+				open,
+				replyingTo: open ? replyingTo : '',
+				id: open ? id : ''
+			};
+		} else {
+			replying.open = replying.open && id !== replying.id ? true : !replying.open;
+			replying.id = id;
+      replying.replyingTo = ''
+		}
 	}
 
 	type TActions = {
@@ -36,6 +45,8 @@
 		replyingTo: string;
 		id: number;
 	};
+
+	$inspect(replying);
 </script>
 
 {#snippet actions({ username, replyingTo ,id}:TActions)}
@@ -130,8 +141,12 @@
 			</p>
 		</div>
 	</div>
-	{#if replying.open && (replying.id === params.id+'' || replying.id+'' === (params as TReply).replyingTo)}
-		{@render textInput({ replying: true })}
+	{#if replying.open && replying.id === params.id + ''}
+		{@render textInput({
+			replyingTo: replying.id ?? '',
+			id: params.id + '',
+			commentId: commentId + ''
+		})}
 	{/if}
 {/snippet}
 
