@@ -4,16 +4,15 @@
 	import CommentCard from './CommentCard.svelte';
 	import { createUser } from './user.svelte.ts';
 
-	const { data } = $props<{ data: PageData; form: ActionData }>();
+	const { data, form } = $props<{ data: PageData; form: ActionData }>();
 
 	const { user } = createUser();
 
 	type TTextInput = {
 		replyId?: string;
 		id: string;
-    replyingTo?:string
+		replyingTo?: string;
 	};
-
 </script>
 
 <svelte:head>
@@ -27,7 +26,8 @@
 		<div class="inline-flex grow gap-x-1 md:gap-x-4">
 			<img
 				src={`/interactive_comments/${user.image}`}
-				alt={user.username} class="inline-flex h-fit"
+				alt={user.username}
+				class="inline-flex h-fit"
 				width={40}
 			/>
 
@@ -55,9 +55,10 @@
 
 <main>
 	<div class="flex w-full max-w-[728px] flex-col gap-y-4">
-		{#each data.data as item (item.comments.id)}
+		{#each data.data as item ('comment'+item.comments.id)}
 			<form method="POST" use:enhance action="?/add">
 				<CommentCard
+					{form}
 					comment={{
 						createdAt: item.comments.createdAt ?? '',
 						content: item.comments.content ?? '',

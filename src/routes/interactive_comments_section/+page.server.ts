@@ -18,8 +18,6 @@ export const actions = {
 		const commentId = form_data.get('commentId');
 		const replyId = form_data.get('replyId');
 
-		console.log({ commentId, replyId });
-
 		if (!commentId) fail(400);
 
 		if (!replyId) {
@@ -29,7 +27,7 @@ export const actions = {
 				where: eq(c.id, Number(commentId))
 			});
 
-			const replies = old_comment?.replies?.filter((r) => r.id !== Number(replyId));
+			const replies = old_comment?.replies?.filter((r) => r.id !== Number(replyId)) ?? [];
 
 			await db
 				.update(c)
@@ -47,8 +45,6 @@ export const actions = {
 		const comment = form_data.get('comment')?.toString();
 		const commentId = form_data.get('commentId')?.toString();
 		const replyId = form_data.get('replyId')?.toString();
-
-		console.log({ comment, commentId, replyId });
 
 		if (!comment) return fail(400, { comment, commentId, replyId });
 
@@ -69,8 +65,6 @@ export const actions = {
 			where: eq(c.id, Number(commentId))
 		});
 
-    console.log(old_comment)
-
 		const replies: TReply[] = [
 			{
 				id: randomInt(9999),
@@ -86,13 +80,9 @@ export const actions = {
 			}
 		];
 
-		if (replyId) {
-			if (!old_comment) return fail(404, { comment, id: commentId, replyingTo: replyId });
-
-			const old_replies = old_comment?.replies;
-			if (old_replies) {
-				replies.unshift(...old_replies);
-			}
+		const old_replies = old_comment?.replies ?? [];
+		if (old_replies) {
+			replies.unshift(...old_replies);
 		}
 
 		await db

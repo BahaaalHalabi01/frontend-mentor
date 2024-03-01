@@ -3,8 +3,10 @@
 	import { type TComment, createUser, type TReply } from './user.svelte';
 	import type { TReplying } from './replying.svelte';
 	import { enhance } from '$app/forms';
+	import type { ActionData } from './$types';
 
-	let { comment, replies, textInput } = $props<{
+	let { comment, replies, textInput, form } = $props<{
+		form: ActionData;
 		comment: TComment;
 		replies: TReply[];
 		textInput: Snippet<{ replyId?: string; id: string; replyingTo?: string }>;
@@ -17,7 +19,6 @@
 	});
 
 	const { user } = createUser();
-	const commentId = comment.id + '';
 
 	function handleReply(
 		event: MouseEvent & {
@@ -56,12 +57,23 @@
 		// editting = ;
 	}
 
+	$effect(() => {
+		if (form?.success) {
+			openState = {
+				replyingTo: '',
+				id: '',
+				open: false
+			};
+		}
+	});
 </script>
 
 {#snippet actions({ username,id,replyingTo}:TActions)}
 	{#if user?.username === username}
 		<div class="ml-auto flex gap-x-6">
 			<form method="POST" action="?/delete" use:enhance>
+				<input class="hidden" name="commentId" value={comment.id ?? ''} />
+				<input class="hidden" name="replyId" value={id ?? ''} />
 				<button class="btn text-[var(--soft-red)]">
 					<img
 						src="/interactive_comments/icon-delete.svg"
@@ -70,8 +82,6 @@
 					/>
 					Delete
 				</button>
-				<input class="hidden" name="commentId" value={commentId ?? ''} />
-				<input class="hidden" name="replyId" value={replyingTo && id ? id : ''} />
 			</form>
 			<button class=" btn text-[var(--moderate-blue)]" onclick={handleEdit} value={id}>
 				<img src="/interactive_comments/icon-edit.svg" alt="edit" class="inline-flex pr-1.5" />
@@ -171,11 +181,11 @@
 		{@render textInput({
 			replyingTo: openState.replyingTo ?? '',
 			replyId: params.id + '',
-			id: commentId + ''
+			id: comment.id + ''
 		})}
 	{:else if openState.open && !openState.replyingTo && params.id + '' === openState.id}
 		{@render textInput({
-			id: commentId + ''
+			id: comment.id + ''
 		})}
 	{/if}
 {/snippet}
@@ -186,7 +196,7 @@
 		<div class="flex gap-x-4 pt-4 md:gap-x-8">
 			<div class="border-r-2 border-gray-300 md:pl-8"></div>
 			<div class="flex w-full flex-col gap-y-4">
-				{#each replies as reply}
+				{#each replies as reply ('reply' + reply.id)}
 					{@render entry(reply)}
 				{/each}
 			</div>
