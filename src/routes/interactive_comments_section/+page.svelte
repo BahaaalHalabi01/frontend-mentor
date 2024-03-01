@@ -11,12 +11,17 @@
 	type TTextInput = {
 		replyingTo?: string;
 		id?: string;
-    commentId?:string
+		commentId?: string;
 	};
 
-	if (form?.success) {
-		alert('added new comment');
-	}
+	$effect(() => {
+		if (form?.success) {
+			alert('added new comment');
+		}
+		if (form?.deleted) {
+			alert('deleted comment');
+		}
+	});
 </script>
 
 <svelte:head>
@@ -58,15 +63,15 @@
 
 <main>
 	<div class="flex w-full max-w-[728px] flex-col gap-y-4">
-		{#each data.data as item}
-			<form method="POST" use:enhance>
+		{#each data.data as item (item.comments.id)}
+			<form method="POST" use:enhance action="?/add">
 				<CommentCard
 					comment={{
 						createdAt: item.comments.createdAt ?? '',
 						content: item.comments.content ?? '',
 						score: item.comments.score ?? 0,
 						user: item.users,
-						id: item.comments.id,
+						id: item.comments.id
 					}}
 					{textInput}
 					replies={item.comments.replies ?? []}
@@ -74,7 +79,7 @@
 			</form>
 		{/each}
 
-		<form method="POST" use:enhance>
+		<form method="POST" use:enhance action="?/add">
 			{@render textInput({ replying: false })}
 		</form>
 	</div>

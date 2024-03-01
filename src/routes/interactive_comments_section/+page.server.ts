@@ -1,7 +1,7 @@
 import db from '$src/lib/server/db';
 import type { Actions, PageServerLoad } from './$types';
 import { users as u, comments as c } from '$src/lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { fail } from '@sveltejs/kit';
 import type { TReply } from './user.svelte';
 import { randomInt } from 'crypto';
@@ -13,16 +13,40 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions = {
-	default: async ({ request }) => {
+	delete: async ({ request }) => {
+		const form_data = await request.formData();
+		const id = form_data.get('id')?.toString();
+		const replyId = form_data.get('replyId')?.toString();
+
+		console.log({ id, replyId });
+
+		if (!id) fail(400);
+
+		if (!replyId) {
+			await db.delete(c).where(and(eq(c.id, Number(id)), eq(c.userId, 'juliusomo')));
+		}
+
+		return { deleted: true };
+	},
+	add: async ({ request }) => {
 		const form_data = await request.formData();
 
 		const comment = form_data.get('comment')?.toString();
 		const id = form_data.get('id')?.toString();
 		const replyingTo = form_data.get('replyingTo')?.toString();
 
-		if (!comment || !id) return fail(400, { comment, id, replyingTo });
+		if (!comment) return fail(400, { comment, id, replyingTo });
 
-    console.log({comment,id,replyingTo})
+		if (!id) {
+			await db.insert(c).values({
+				replies: [],
+				id: randomInt(9999),
+				score: 0,
+				userId: 'juliusomo',
+				content: comment,
+				createdAt: 'now'
+			});
+		}
 
 		const old_comment = await db.query.comments.findFirst({
 			where: eq(c.id, Number(id))
@@ -44,7 +68,7 @@ export const actions = {
 		];
 
 		if (replyingTo) {
-			if (!old_comment) fail(404, { comment, id, replyingTo });
+			if (!old_comment) throw fail(404, { comment, id, replyingTo });
 
 			const old_replies = old_comment?.replies;
 			if (old_replies) {
