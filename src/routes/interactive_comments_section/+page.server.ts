@@ -15,15 +15,28 @@ export const load: PageServerLoad = async () => {
 export const actions = {
 	delete: async ({ request }) => {
 		const form_data = await request.formData();
-		const id = form_data.get('id')?.toString();
-		const replyId = form_data.get('replyId')?.toString();
+		const commentId = form_data.get('commentId');
+		const replyId = form_data.get('replyId');
 
-		console.log({ id, replyId });
+		console.log({ commentId, replyId });
 
-		if (!id) fail(400);
+		if (!commentId) fail(400);
 
 		if (!replyId) {
-			await db.delete(c).where(and(eq(c.id, Number(id)), eq(c.userId, 'juliusomo')));
+			await db.delete(c).where(and(eq(c.id, Number(commentId)), eq(c.userId, 'juliusomo')));
+		} else {
+			const old_comment = await db.query.comments.findFirst({
+				where: eq(c.id, Number(commentId))
+			});
+
+			const replies = old_comment?.replies?.filter((r) => r.id !== Number(replyId));
+
+			await db
+				.update(c)
+				.set({
+					replies
+				})
+				.where(eq(c.id, Number(commentId)));
 		}
 
 		return { deleted: true };
@@ -32,12 +45,14 @@ export const actions = {
 		const form_data = await request.formData();
 
 		const comment = form_data.get('comment')?.toString();
-		const id = form_data.get('id')?.toString();
-		const replyingTo = form_data.get('replyingTo')?.toString();
+		const commentId = form_data.get('commentId')?.toString();
+		const replyId = form_data.get('replyId')?.toString();
 
-		if (!comment) return fail(400, { comment, id, replyingTo });
+		console.log({ comment, commentId, replyId });
 
-		if (!id) {
+		if (!comment) return fail(400, { comment, commentId, replyId });
+
+		if (!commentId) {
 			await db.insert(c).values({
 				replies: [],
 				id: randomInt(9999),
@@ -46,16 +61,20 @@ export const actions = {
 				content: comment,
 				createdAt: 'now'
 			});
+
+			return { success: true };
 		}
 
 		const old_comment = await db.query.comments.findFirst({
-			where: eq(c.id, Number(id))
+			where: eq(c.id, Number(commentId))
 		});
+
+    console.log(old_comment)
 
 		const replies: TReply[] = [
 			{
 				id: randomInt(9999),
-				replyingTo: replyingTo ?? '',
+				replyingTo: replyId ?? '',
 				score: 0,
 				content: comment,
 				createdAt: 'now',
@@ -67,8 +86,8 @@ export const actions = {
 			}
 		];
 
-		if (replyingTo) {
-			if (!old_comment) throw fail(404, { comment, id, replyingTo });
+		if (replyId) {
+			if (!old_comment) return fail(404, { comment, id: commentId, replyingTo: replyId });
 
 			const old_replies = old_comment?.replies;
 			if (old_replies) {
@@ -81,7 +100,7 @@ export const actions = {
 			.set({
 				replies
 			})
-			.where(eq(c.id, Number(id)));
+			.where(eq(c.id, Number(commentId)));
 
 		return { success: true };
 	}

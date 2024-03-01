@@ -7,44 +7,44 @@
 	let { comment, replies, textInput } = $props<{
 		comment: TComment;
 		replies: TReply[];
-		textInput: Snippet<{ replyingTo?: string; id?: string; commentId?: string }>;
+		textInput: Snippet<{ replyId?: string; id: string; replyingTo?: string }>;
 	}>();
 
-	let replying = $state<TReplying>({
+	let openState = $state<TReplying>({
 		open: false,
 		replyingTo: '',
 		id: ''
 	});
 
-
 	const { user } = createUser();
-	const commentId = comment.id;
+	const commentId = comment.id + '';
 
 	function handleReply(
 		event: MouseEvent & {
 			currentTarget: EventTarget & HTMLButtonElement;
 		}
 	) {
-		const replyingTo = event.currentTarget.dataset.replyingto;
 		const id = event.currentTarget.dataset.id;
+		const replyingTo = event.currentTarget.dataset.replyingto;
 
 		if (replyingTo) {
-			const open = replyingTo === replying.replyingTo ? !replying.open : true;
-			replying = {
+			const open = replyingTo === openState.replyingTo ? !openState.open : true;
+			openState = {
 				open,
-				replyingTo: open ? replyingTo : '',
-				id: open ? id : ''
+				id: open ? id : '',
+				replyingTo: open ? replyingTo : ''
 			};
 		} else {
-			replying.open = replying.open && id !== replying.id ? true : !replying.open;
-			replying.id = id;
-			replying.replyingTo = '';
+			const open = openState.replyingTo ? true : !openState.open;
+			openState.open = open;
+			openState.id = open ? id : '';
+			openState.replyingTo = '';
 		}
 	}
 
 	type TActions = {
 		username: string;
-		replyingTo: string;
+		replyingTo?: string;
 		id: number;
 	};
 	function handleEdit(
@@ -55,9 +55,10 @@
 		console.log(event.currentTarget.value);
 		// editting = ;
 	}
+
 </script>
 
-{#snippet actions({ username, replyingTo ,id}:TActions)}
+{#snippet actions({ username,id,replyingTo}:TActions)}
 	{#if user?.username === username}
 		<div class="ml-auto flex gap-x-6">
 			<form method="POST" action="?/delete" use:enhance>
@@ -69,23 +70,21 @@
 					/>
 					Delete
 				</button>
-				<input class="hidden" name="id" value={id ?? ''} />
-				<input class="hidden" name="replyingTo" value={replyingTo ?? ''} />
+				<input class="hidden" name="commentId" value={commentId ?? ''} />
+				<input class="hidden" name="replyId" value={replyingTo && id ? id : ''} />
 			</form>
 			<button class=" btn text-[var(--moderate-blue)]" onclick={handleEdit} value={id}>
 				<img src="/interactive_comments/icon-edit.svg" alt="edit" class="inline-flex pr-1.5" />
 				Edit
 			</button>
-			<input class="hidden" name="id" value={id ?? ''} />
-			<input class="hidden" name="replyingTo" value={replyingTo ?? ''} />
 		</div>
 	{:else}
 		<button
 			type="button"
 			class=" btn text-[var(--moderate-blue)]"
 			onclick={handleReply}
+			data-id={id ?? ''}
 			data-replyingto={replyingTo}
-			data-id={id}
 		>
 			<img src="/interactive_comments/icon-reply.svg" alt="goback" class="" />
 			Reply
@@ -93,7 +92,8 @@
 	{/if}
 {/snippet}
 
-{#snippet entry(params:TReply | TComment)}
+<!-- params can be TReply and TComment, but for ease of writing types in snippets, i put it as TReply-->
+{#snippet entry(params:TReply)}
 	<div class="flex min-w-full flex-col gap-x-6 rounded-lg bg-white p-4 shadow md:flex-row md:p-6">
 		<div class=" order-1 flex items-center justify-between pt-4 md:order-none md:pt-0">
 			<div
@@ -118,7 +118,11 @@
 				</button>
 			</div>
 			<div class="md:hidden">
-				{@render actions({username:params.user.username,replyingTo:(params as TReply).replyingTo,id:params.id})}
+				{@render actions({
+					username: params.user.username,
+					id: params.id,
+					replyingTo: params.replyingTo
+				})}
 			</div>
 		</div>
 
@@ -143,7 +147,11 @@
 
 				<span class="text-[var(--grayish-blue)]" aria-label="created at">{params.createdAt}</span>
 				<div class="ml-auto hidden md:block">
-					{@render actions({username:params.user.username,replyingTo:(params as TReply).replyingTo,id:params.id})}
+					{@render actions({
+						username: params.user.username,
+						id: params.id,
+						replyingTo: params.replyingTo
+					})}
 				</div>
 			</div>
 			<p
@@ -159,11 +167,15 @@
 			</p>
 		</div>
 	</div>
-	{#if replying.open && replying.id === params.id + ''}
+	{#if openState.open && openState.replyingTo && params.replyingTo === openState.replyingTo}
 		{@render textInput({
-			replyingTo: replying.id ?? '',
-			id: params.id + '',
-			commentId: commentId + ''
+			replyingTo: openState.replyingTo ?? '',
+			replyId: params.id + '',
+			id: commentId + ''
+		})}
+	{:else if openState.open && !openState.replyingTo && params.id + '' === openState.id}
+		{@render textInput({
+			id: commentId + ''
 		})}
 	{/if}
 {/snippet}

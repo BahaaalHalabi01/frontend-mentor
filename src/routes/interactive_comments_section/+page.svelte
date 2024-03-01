@@ -4,24 +4,16 @@
 	import CommentCard from './CommentCard.svelte';
 	import { createUser } from './user.svelte.ts';
 
-	const { data, form } = $props<{ data: PageData; form: ActionData }>();
+	const { data } = $props<{ data: PageData; form: ActionData }>();
 
 	const { user } = createUser();
 
 	type TTextInput = {
-		replyingTo?: string;
-		id?: string;
-		commentId?: string;
+		replyId?: string;
+		id: string;
+    replyingTo?:string
 	};
 
-	$effect(() => {
-		if (form?.success) {
-			alert('added new comment');
-		}
-		if (form?.deleted) {
-			alert('deleted comment');
-		}
-	});
 </script>
 
 <svelte:head>
@@ -35,8 +27,7 @@
 		<div class="inline-flex grow gap-x-1 md:gap-x-4">
 			<img
 				src={`/interactive_comments/${user.image}`}
-				alt={user.username}
-				class="inline-flex h-fit"
+				alt={user.username} class="inline-flex h-fit"
 				width={40}
 			/>
 
@@ -51,12 +42,13 @@
 				title={input ? 'add a reply' : 'add a comment'}
 			/>
 		</div>
-		<input class="hidden" name="id" value={input.id ?? ''} />
+		<input class="hidden" name="commentId" value={input.id ?? ''} />
 		<input class="hidden" name="replyingTo" value={input.replyingTo ?? ''} />
+		<input class="hidden" name="replyId" value={input.replyId ?? ''} />
 		<button
 			class="ml-auto inline-flex max-w-fit basis-auto flex-wrap rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white hover:opacity-30"
 		>
-			{input.replyingTo ? 'Reply' : 'Send'}
+			{input.replyId ? 'Reply' : 'Send'}
 		</button>
 	</div>
 {/snippet}

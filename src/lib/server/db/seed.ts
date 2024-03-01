@@ -102,13 +102,9 @@ async function seed() {
 		);
 	}
 
-	// console.log(seedUsers());
+	console.log(await seedUsers());
 	console.log(await seedComments());
-  //
-  
 
-
-	console.debug('success');
 }
 
 seed();
