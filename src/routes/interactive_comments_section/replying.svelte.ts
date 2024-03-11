@@ -1,6 +1,6 @@
 export type TReplying = {
-	replyingTo?: string;
-	id?: string;
+	replyingTo: string;
+	id: string;
 };
 
 function createId() {

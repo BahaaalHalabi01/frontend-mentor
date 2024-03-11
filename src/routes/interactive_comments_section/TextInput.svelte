@@ -3,9 +3,18 @@
 
 	const { user } = createUser();
 
-	type TProps = {};
+	type TProps = {
+		open: boolean;
+		replyingTo: string;
+	};
 
-	let {} = $props<TProps>();
+	let { replyingTo, open } = $props<TProps>();
+
+	let input = $state<null | HTMLTextAreaElement>(null);
+
+	$effect(() => {
+		if (open) input?.focus();
+	});
 </script>
 
 <div
@@ -20,13 +29,15 @@
 		/>
 
 		<textarea
-			class=" inline-flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 placeholder:text-[var(--grayish-blue)] md:w-fit"
+			bind:this={input}
+      spellcheck={false}
+			class="inline-flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 outline-none placeholder:text-[var(--grayish-blue)] focus:ring-1 md:w-fit"
 			placeholder={'Add a comment...'}
 			aria-label={'New Comment'}
 			rows="3"
+			value={`@${replyingTo} `}
 			name="comment"
 			maxlength="1000"
-			spellcheck="true"
 			title={'Add a comment'}
 		/>
 	</div>

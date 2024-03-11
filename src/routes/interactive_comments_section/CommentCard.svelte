@@ -17,13 +17,11 @@
 		id: ''
 	});
 
-	let defaultValue = $state('');
-
 	const { user } = createUser();
 
 	const handleReply: ChangeEventHandler<HTMLButtonElement> = (event) => {
-		const id = event.currentTarget.dataset.id;
-		const replyingTo = event.currentTarget.dataset.replyingto;
+		const id = event.currentTarget.dataset.id ?? '';
+		const replyingTo = event.currentTarget.dataset.replyingto ?? '';
 
 		if (id !== openState.id) {
 			openState = {
@@ -31,14 +29,10 @@
 				replyingTo
 			};
 		} else {
-      openState = {
-        id:'',
-        replyingTo:''
-      }
-		}
-
-		if (openState.replyingTo) {
-			defaultValue = '@' + openState.replyingTo + ' ';
+			openState = {
+				id: '',
+				replyingTo: ''
+			};
 		}
 	};
 
@@ -55,7 +49,7 @@
 		if (form?.success) {
 			openState = {
 				replyingTo: '',
-				id: '',
+				id: ''
 			};
 		}
 	});
@@ -143,7 +137,10 @@
 		</div>
 	</div>
 	{#if openState.id === String(params.id)}
-		<TextInput replyingTo={openState.replyingTo} replyId={params.id} id={comment.id} />
+		<TextInput
+			replyingTo={openState.replyingTo}
+			open={openState.id === String(params.id)}
+		/>
 	{/if}
 {/snippet}
 
