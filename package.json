@@ -13,7 +13,8 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"db:dev": "turso dev --db-file dev.db"
+		"db:dev": "turso dev --db-file dev.db",
+		"db:studio": "pnpm drizzle-kit studio"
 	},
 	"devDependencies": {
 		"@playwright/test": "1.41.0",

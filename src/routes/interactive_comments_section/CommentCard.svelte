@@ -4,12 +4,13 @@
 	import type { TReplying } from './replying.svelte';
 	import { enhance } from '$app/forms';
 	import type { ActionData } from './$types';
+	import TextInput from './TextInput.svelte';
+	import Actions from './Actions.svelte';
 
-	let { comment, replies, textInput, form } = $props<{
+	let { comment, replies, form } = $props<{
 		form: ActionData;
 		comment: TComment;
 		replies: TReply[];
-		textInput: Snippet<{ replyId?: string; id: string; replyingTo?: string }>;
 	}>();
 
 	let openState = $state<TReplying>({
@@ -17,6 +18,8 @@
 		replyingTo: '',
 		id: ''
 	});
+
+	let defaultValue = $state('');
 
 	const { user } = createUser();
 
@@ -40,6 +43,10 @@
 			openState.open = open;
 			openState.id = open ? id : '';
 			openState.replyingTo = '';
+		}
+
+		if (openState.replyingTo) {
+			defaultValue = '@' + openState.replyingTo + ' ';
 		}
 	}
 
@@ -66,41 +73,9 @@
 			};
 		}
 	});
-</script>
 
-{#snippet actions({ username,id,replyingTo}:TActions)}
-	{#if user?.username === username}
-		<div class="ml-auto flex gap-x-6">
-			<form method="POST" action="?/delete" use:enhance>
-				<input class="hidden" name="commentId" value={comment.id ?? ''} />
-				<input class="hidden" name="replyId" value={id ?? ''} />
-				<button class="btn text-[var(--soft-red)]">
-					<img
-						src="/interactive_comments/icon-delete.svg"
-						alt="delete"
-						class="inline-flex pr-1.5"
-					/>
-					Delete
-				</button>
-			</form>
-			<button class=" btn text-[var(--moderate-blue)]" onclick={handleEdit} value={id}>
-				<img src="/interactive_comments/icon-edit.svg" alt="edit" class="inline-flex pr-1.5" />
-				Edit
-			</button>
-		</div>
-	{:else}
-		<button
-			type="button"
-			class=" btn text-[var(--moderate-blue)]"
-			onclick={handleReply}
-			data-id={id ?? ''}
-			data-replyingto={replyingTo}
-		>
-			<img src="/interactive_comments/icon-reply.svg" alt="goback" class="" />
-			Reply
-		</button>
-	{/if}
-{/snippet}
+	$inspect(openState);
+</script>
 
 <!-- params can be TReply and TComment, but for ease of writing types in snippets, i put it as TReply-->
 {#snippet entry(params:TReply)}
@@ -128,11 +103,11 @@
 				</button>
 			</div>
 			<div class="md:hidden">
-				{@render actions({
-					username: params.user.username,
-					id: params.id,
-					replyingTo: params.replyingTo
-				})}
+				<Actions
+					username={params.user.username}
+					id={String(params.id)}
+					replyingTo={params.replyingTo}
+				/>
 			</div>
 		</div>
 
@@ -157,11 +132,11 @@
 
 				<span class="text-[var(--grayish-blue)]" aria-label="created at">{params.createdAt}</span>
 				<div class="ml-auto hidden md:block">
-					{@render actions({
-						username: params.user.username,
-						id: params.id,
-						replyingTo: params.replyingTo
-					})}
+					<Actions
+						username={params.user.username}
+						id={String(params.id)}
+						replyingTo={params.replyingTo}
+					/>
 				</div>
 			</div>
 			<p
@@ -178,15 +153,9 @@
 		</div>
 	</div>
 	{#if openState.open && openState.replyingTo && params.replyingTo === openState.replyingTo}
-		{@render textInput({
-			replyingTo: openState.replyingTo ?? '',
-			replyId: params.id + '',
-			id: comment.id + ''
-		})}
+		<TextInput replyingTo={openState.replyingTo} replyId={params.id} id={comment.id} />
 	{:else if openState.open && !openState.replyingTo && params.id + '' === openState.id}
-		{@render textInput({
-			id: comment.id + ''
-		})}
+		<TextInput id={comment.id} {defaultValue} />
 	{/if}
 {/snippet}
 
@@ -205,14 +174,6 @@
 </div>
 
 <style>
-	.btn {
-		@apply ml-auto flex items-center rounded-md font-semibold hover:opacity-30;
-	}
-
-	.btn > img {
-		@apply inline-flex pr-1.5;
-	}
-
 	.increment {
 		@apply flex size-8 items-center justify-center rounded-lg hover:fill-[var(--moderate-blue)] md:h-7 md:w-8;
 		fill: var(--light-grayish-blue);

@@ -45,6 +45,8 @@ export const actions = {
 		const comment = form_data.get('comment')?.toString();
 		const commentId = form_data.get('commentId')?.toString();
 		const replyId = form_data.get('replyId')?.toString();
+		const replyingTo = form_data.get('replyingTo')?.toString();
+
 
 		if (!comment) return fail(400, { comment, commentId, replyId });
 
@@ -68,7 +70,7 @@ export const actions = {
 		const replies: TReply[] = [
 			{
 				id: randomInt(9999),
-				replyingTo: replyId ?? '',
+				replyingTo: replyingTo ?? '',
 				score: 0,
 				content: comment,
 				createdAt: 'now',
