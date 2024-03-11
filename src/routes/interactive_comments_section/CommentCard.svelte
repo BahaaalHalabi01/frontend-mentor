@@ -1,11 +1,10 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import { type TComment, createUser, type TReply } from './user.svelte';
 	import type { TReplying } from './replying.svelte';
-	import { enhance } from '$app/forms';
 	import type { ActionData } from './$types';
 	import TextInput from './TextInput.svelte';
 	import Actions from './Actions.svelte';
+	import type { ChangeEventHandler } from 'svelte/elements';
 
 	let { comment, replies, form } = $props<{
 		form: ActionData;
@@ -14,7 +13,6 @@
 	}>();
 
 	let openState = $state<TReplying>({
-		open: false,
 		replyingTo: '',
 		id: ''
 	});
@@ -23,38 +21,27 @@
 
 	const { user } = createUser();
 
-	function handleReply(
-		event: MouseEvent & {
-			currentTarget: EventTarget & HTMLButtonElement;
-		}
-	) {
+	const handleReply: ChangeEventHandler<HTMLButtonElement> = (event) => {
 		const id = event.currentTarget.dataset.id;
 		const replyingTo = event.currentTarget.dataset.replyingto;
 
-		if (replyingTo) {
-			const open = replyingTo === openState.replyingTo ? !openState.open : true;
+		if (id !== openState.id) {
 			openState = {
-				open,
-				id: open ? id : '',
-				replyingTo: open ? replyingTo : ''
+				id,
+				replyingTo
 			};
 		} else {
-			const open = openState.replyingTo ? true : !openState.open;
-			openState.open = open;
-			openState.id = open ? id : '';
-			openState.replyingTo = '';
+      openState = {
+        id:'',
+        replyingTo:''
+      }
 		}
 
 		if (openState.replyingTo) {
 			defaultValue = '@' + openState.replyingTo + ' ';
 		}
-	}
-
-	type TActions = {
-		username: string;
-		replyingTo?: string;
-		id: number;
 	};
+
 	function handleEdit(
 		event: MouseEvent & {
 			currentTarget: EventTarget & HTMLButtonElement;
@@ -69,7 +56,6 @@
 			openState = {
 				replyingTo: '',
 				id: '',
-				open: false
 			};
 		}
 	});
@@ -104,9 +90,11 @@
 			</div>
 			<div class="md:hidden">
 				<Actions
+					{handleReply}
 					username={params.user.username}
 					id={String(params.id)}
 					replyingTo={params.replyingTo}
+					isNested={params.isNested}
 				/>
 			</div>
 		</div>
@@ -133,6 +121,8 @@
 				<span class="text-[var(--grayish-blue)]" aria-label="created at">{params.createdAt}</span>
 				<div class="ml-auto hidden md:block">
 					<Actions
+						isNested={params.isNested}
+						{handleReply}
 						username={params.user.username}
 						id={String(params.id)}
 						replyingTo={params.replyingTo}
@@ -152,10 +142,8 @@
 			</p>
 		</div>
 	</div>
-	{#if openState.open && openState.replyingTo && params.replyingTo === openState.replyingTo}
+	{#if openState.id === String(params.id)}
 		<TextInput replyingTo={openState.replyingTo} replyId={params.id} id={comment.id} />
-	{:else if openState.open && !openState.replyingTo && params.id + '' === openState.id}
-		<TextInput id={comment.id} {defaultValue} />
 	{/if}
 {/snippet}
 
@@ -166,7 +154,7 @@
 			<div class="border-r-2 border-gray-300 md:pl-8"></div>
 			<div class="flex w-full flex-col gap-y-4">
 				{#each replies as reply ('reply' + reply.id)}
-					{@render entry(reply)}
+					{@render entry({ ...reply, isNested: true })}
 				{/each}
 			</div>
 		</div>

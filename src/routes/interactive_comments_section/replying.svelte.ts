@@ -1,5 +1,4 @@
 export type TReplying = {
-	open: boolean;
 	replyingTo?: string;
 	id?: string;
 };

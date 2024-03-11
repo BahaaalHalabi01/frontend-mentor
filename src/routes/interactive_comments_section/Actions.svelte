@@ -6,6 +6,7 @@
 	type TProps = {
 		username?: string;
 		commentId?: string;
+		isNested?: boolean;
 		replyingTo?: string;
 		id?: string;
 		handleReply?: ChangeEventHandler<HTMLButtonElement>;
@@ -15,6 +16,7 @@
 	let { replyingTo, id, username, commentId, handleReply, handleEdit } = $props<TProps>();
 
 	const { user } = createUser();
+
 </script>
 
 {#if user?.username === username}
@@ -38,7 +40,7 @@
 		type="button"
 		class=" btn text-[var(--moderate-blue)]"
 		onclick={handleReply}
-		data-id={id ?? ''}
+		data-id={id}
 		data-replyingto={replyingTo ?? username}
 	>
 		<img src="/interactive_comments/icon-reply.svg" alt="goback" class="" />
@@ -54,5 +56,4 @@
 	.btn > img {
 		@apply inline-flex pr-1.5;
 	}
-
 </style>

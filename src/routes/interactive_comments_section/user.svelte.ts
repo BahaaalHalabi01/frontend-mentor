@@ -9,6 +9,7 @@ type TBase = {
 	id: number;
 	user: TUser;
 	score: number;
+  isNested?:boolean
 };
 
 type TComment = TBase;
