@@ -16,20 +16,17 @@
 <main>
 	<div class="flex w-full max-w-[728px] flex-col gap-y-4">
 		{#each data.data as item ('comment' + item.comments.id)}
-			<form method="POST" use:enhance action="?/add">
-				<CommentCard
-					{form}
-					comment={{
-						createdAt: item.comments.createdAt ?? '',
-						content: item.comments.content ?? '',
-						score: item.comments.score ?? 0,
-						user: item.users,
-						id: item.comments.id
-					}}
-
-					replies={item.comments.replies ?? []}
-				/>
-			</form>
+			<CommentCard
+				{form}
+				comment={{
+					createdAt: item.comments.createdAt ?? '',
+					content: item.comments.content ?? '',
+					score: item.comments.score ?? 0,
+					user: item.users,
+					id: item.comments.id
+				}}
+				replies={item.comments.replies ?? []}
+			/>
 		{/each}
 
 		<form method="POST" use:enhance action="?/add">

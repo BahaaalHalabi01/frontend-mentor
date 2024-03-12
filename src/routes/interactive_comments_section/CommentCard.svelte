@@ -2,9 +2,9 @@
 	import { type TComment, createUser, type TReply } from './user.svelte';
 	import type { TReplying } from './replying.svelte';
 	import type { ActionData } from './$types';
-	import TextInput from './TextInput.svelte';
 	import Actions from './Actions.svelte';
 	import type { ChangeEventHandler } from 'svelte/elements';
+	import TextForm from './TextForm.svelte';
 
 	let { comment, replies, form } = $props<{
 		form: ActionData;
@@ -53,8 +53,6 @@
 			};
 		}
 	});
-
-	$inspect(openState);
 </script>
 
 <!-- params can be TReply and TComment, but for ease of writing types in snippets, i put it as TReply-->
@@ -85,6 +83,7 @@
 			<div class="md:hidden">
 				<Actions
 					{handleReply}
+					commentId={String(comment.id)}
 					username={params.user.username}
 					id={String(params.id)}
 					replyingTo={params.replyingTo}
@@ -116,6 +115,7 @@
 				<div class="ml-auto hidden md:block">
 					<Actions
 						isNested={params.isNested}
+						commentId={String(comment.id)}
 						{handleReply}
 						username={params.user.username}
 						id={String(params.id)}
@@ -137,9 +137,10 @@
 		</div>
 	</div>
 	{#if openState.id === String(params.id)}
-		<TextInput
+		<TextForm
 			replyingTo={openState.replyingTo}
 			open={openState.id === String(params.id)}
+			id={String(comment.id)}
 		/>
 	{/if}
 {/snippet}

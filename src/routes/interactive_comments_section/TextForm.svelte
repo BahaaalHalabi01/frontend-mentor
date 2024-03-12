@@ -1,16 +1,16 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { createUser } from './user.svelte';
 
 	const { user } = createUser();
 
 	type TProps = {
+		id: string;
 		open: boolean;
 		replyingTo: string;
-    id:string
-
 	};
 
-	let { replyingTo, open ,id} = $props<TProps>();
+	let { replyingTo, open, id } = $props<TProps>();
 
 	let input = $state<null | HTMLTextAreaElement>(null);
 
@@ -20,6 +20,9 @@
 </script>
 
 <form
+	method="POST"
+	use:enhance
+	action="?/add"
 	class="flex min-w-full flex-wrap gap-y-4 rounded-lg bg-white px-2 py-4 shadow md:flex-row md:items-start md:gap-x-4 md:p-6"
 >
 	<div class="inline-flex grow gap-x-1 md:gap-x-4">
@@ -32,7 +35,7 @@
 
 		<textarea
 			bind:this={input}
-      spellcheck={false}
+			spellcheck={false}
 			class="inline-flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 outline-none placeholder:text-[var(--grayish-blue)] focus:ring-1 md:w-fit"
 			placeholder={'Add a comment...'}
 			aria-label={'New Comment'}
