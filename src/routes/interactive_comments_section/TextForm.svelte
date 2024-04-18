@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Button from './Button.svelte';
 	import { createUser } from './user.svelte';
 
 	const { user } = createUser();
@@ -8,9 +9,10 @@
 		id: string;
 		open: boolean;
 		replyingTo: string;
+		editing?: boolean;
 	};
 
-	let { replyingTo, open, id } = $props<TProps>();
+	let { replyingTo, open, id, editing }:TProps = $props();
 
 	let input = $state<null | HTMLTextAreaElement>(null);
 
@@ -48,9 +50,7 @@
 	</div>
 	<input class="hidden" name="commentId" value={id} />
 	<input class="hidden" name="replyingTo" value={replyingTo} />
-	<button
-		class="ml-auto inline-flex max-w-fit basis-auto flex-wrap rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white hover:opacity-30"
-	>
-		{'Send'}
-	</button>
+  <Button>
+		{editing ? 'Update' : 'Send'}
+	</Button>
 </form>

@@ -5,21 +5,25 @@
 	import Actions from './Actions.svelte';
 	import type { ChangeEventHandler } from 'svelte/elements';
 	import TextForm from './TextForm.svelte';
+	import Button from './Button.svelte';
 
-	let { comment, replies, form } = $props<{
+	type Props = {
 		form: ActionData;
 		comment: TComment;
 		replies: TReply[];
-	}>();
+	};
+	let { comment, replies, form }: Props = $props();
 
 	let openState = $state<TReplying>({
 		replyingTo: '',
 		id: ''
 	});
 
+	let editing = $state(false);
+
 	const { user } = createUser();
 
-	const handleReply: ChangeEventHandler<HTMLButtonElement> = (event) => {
+	const handleReply: ChangeEventHandler<HTMLButtonElement> = function (event) {
 		const id = event.currentTarget.dataset.id ?? '';
 		const replyingTo = event.currentTarget.dataset.replyingto ?? '';
 
@@ -36,14 +40,9 @@
 		}
 	};
 
-	function handleEdit(
-		event: MouseEvent & {
-			currentTarget: EventTarget & HTMLButtonElement;
-		}
-	) {
-		console.log(event.currentTarget.value);
-		// editting = ;
-	}
+	const handleEdit: ChangeEventHandler<HTMLButtonElement> = function () {
+		editing = !editing;
+	};
 
 	$effect(() => {
 		if (form?.success) {
@@ -58,7 +57,7 @@
 <!-- params can be TReply and TComment, but for ease of writing types in snippets, i put it as TReply-->
 {#snippet entry(params:TReply)}
 	<div class="flex min-w-full flex-col gap-x-6 rounded-lg bg-white p-4 shadow md:flex-row md:p-6">
-		<div class=" order-1 flex items-center justify-between pt-4 md:order-none md:pt-0">
+		<div class=" order-1 flex items-start justify-between pt-4 md:order-none md:pt-0">
 			<div
 				class="inline-flex size-fit flex-row items-center gap-y-2 rounded-lg bg-[var(--very-light-gray)] shadow md:flex-col"
 			>
@@ -82,6 +81,7 @@
 			</div>
 			<div class="md:hidden">
 				<Actions
+					{handleEdit}
 					{handleReply}
 					commentId={String(comment.id)}
 					username={params.user.username}
@@ -116,6 +116,7 @@
 					<Actions
 						isNested={params.isNested}
 						commentId={String(comment.id)}
+						{handleEdit}
 						{handleReply}
 						username={params.user.username}
 						id={String(params.id)}
@@ -126,6 +127,7 @@
 			<p
 				aria-label="comment"
 				class="pr-3 text-base font-normal leading-snug text-[var(--grayish-blue)] md:leading-loose"
+				class:hidden={editing}
 			>
 				{#if (params as TReply).replyingTo}
 					<span class="font-bold text-[var(--moderate-blue)]">
@@ -134,9 +136,22 @@
 				{/if}
 				{params.content}
 			</p>
+			<form
+				action="?/edit"
+				method="post"
+				class:hidden={!editing}
+				class=" flex grow flex-col items-end gap-y-4"
+			>
+				<textarea
+					class="leading-slug w-full pr-4 text-base font-normal text-[var(--grayish-blue)] md:leading-loose"
+					value={params.content}
+				/>
+				<Button>Update</Button>
+			</form>
 		</div>
 	</div>
-	{#if openState.id === String(params.id)}
+
+	{#if openState.id === String(params.id) && !editing}
 		<TextForm
 			replyingTo={openState.replyingTo}
 			open={openState.id === String(params.id)}

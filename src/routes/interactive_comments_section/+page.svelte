@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { PageData, ActionData } from './$types';
+	import Button from './Button.svelte';
 	import CommentCard from './CommentCard.svelte';
 	import { createUser } from './user.svelte.ts';
 
-	const { data, form } = $props<{ data: PageData; form: ActionData }>();
+	const { data, form }: { data: PageData; form: ActionData } = $props();
 
 	const { user } = createUser();
 </script>
@@ -53,11 +54,9 @@
 					/>
 				</div>
 				<input class="hidden" name="commentId" value={''} />
-				<button
-					class="ml-auto inline-flex max-w-fit basis-auto flex-wrap rounded-md bg-[var(--moderate-blue)] px-6 py-2.5 font-medium uppercase text-white hover:opacity-30"
-				>
+				<Button>
 					{'Send'}
-				</button>
+				</Button>
 			</div>
 		</form>
 	</div>

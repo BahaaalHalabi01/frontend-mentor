@@ -9,11 +9,11 @@
 		isNested?: boolean;
 		replyingTo?: string;
 		id?: string;
-		handleReply?: ChangeEventHandler<HTMLButtonElement>;
-		handleEdit?: ChangeEventHandler<HTMLButtonElement>;
+		handleReply: ChangeEventHandler<HTMLButtonElement>;
+		handleEdit: ChangeEventHandler<HTMLButtonElement>;
 	};
 
-	let { replyingTo, id, username, commentId, handleReply, handleEdit, isNested } = $props<TProps>();
+	let { replyingTo, id, username, commentId, handleReply, handleEdit, isNested }:TProps = $props();
 
 	const { user } = createUser();
 

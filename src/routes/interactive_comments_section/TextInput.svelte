@@ -6,11 +6,10 @@
 	type TProps = {
 		open: boolean;
 		replyingTo: string;
-    id:string
-
+		id: string;
 	};
 
-	let { replyingTo, open ,id} = $props<TProps>();
+	let { replyingTo, open, id }: TProps = $props();
 
 	let input = $state<null | HTMLTextAreaElement>(null);
 
@@ -32,7 +31,7 @@
 
 		<textarea
 			bind:this={input}
-      spellcheck={false}
+			spellcheck={false}
 			class="inline-flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 outline-none placeholder:text-[var(--grayish-blue)] focus:ring-1 md:w-fit"
 			placeholder={'Add a comment...'}
 			aria-label={'New Comment'}
