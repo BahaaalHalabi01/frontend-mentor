@@ -62,7 +62,10 @@ const data = {
 
 async function seed() {
 	const turso = createClient({
-		url: 'http://127.0.0.1:8080'
+		// url: 'http://127.0.0.1:8080',
+		url: process.env.DB_URL!,
+		authToken: process.env.DB_AUTH_TOKEN!
+
 	});
 
 	const db = drizzle(turso);
