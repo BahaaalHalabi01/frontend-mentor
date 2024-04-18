@@ -43,7 +43,7 @@
 					/>
 
 					<textarea
-						class=" inline-flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 placeholder:text-[var(--grayish-blue)] md:w-fit"
+						class="inline-flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 outline-none placeholder:text-[var(--grayish-blue)] focus:border-[var(--moderate-blue)] focus:ring-1 active:border-[var(--moderate-blue)] md:w-fit"
 						placeholder={'Add a comment...'}
 						aria-label={'New Comment'}
 						rows="3"
@@ -80,10 +80,6 @@
 		font-family: 'Rubik', sans-serif;
 		background-color: var(--light-gray);
 		@apply flex min-h-full flex-col items-center px-4 py-8 md:px-8 md:py-20;
-	}
-
-	textarea {
-		@apply outline-none focus:border-[var(--moderate-blue)] active:border-[var(--moderate-blue)];
 	}
 
 	@font-face {

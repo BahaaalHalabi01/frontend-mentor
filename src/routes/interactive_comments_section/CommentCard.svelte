@@ -143,7 +143,7 @@
 				class=" flex grow flex-col items-end gap-y-4"
 			>
 				<textarea
-					class="leading-slug w-full pr-4 text-base font-normal text-[var(--grayish-blue)] md:leading-loose"
+					class="flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 outline-none placeholder:text-[var(--grayish-blue)] focus:border-[var(--moderate-blue)] focus:ring-1 active:border-[var(--moderate-blue)]"
 					value={params.content}
 				/>
 				<Button>Update</Button>
@@ -161,7 +161,7 @@
 {/snippet}
 
 <div class="flex flex-col gap-y-2">
-	{@render entry(comment)}
+	{@render entry(comment as TReply)}
 	{#if replies.length > 0}
 		<div class="flex gap-x-4 pt-4 md:gap-x-8">
 			<div class="border-r-2 border-gray-300 md:pl-8"></div>

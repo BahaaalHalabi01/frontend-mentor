@@ -12,7 +12,7 @@
 		editing?: boolean;
 	};
 
-	let { replyingTo, open, id, editing }:TProps = $props();
+	let { replyingTo, open, id, editing }: TProps = $props();
 
 	let input = $state<null | HTMLTextAreaElement>(null);
 
@@ -38,7 +38,7 @@
 		<textarea
 			bind:this={input}
 			spellcheck={false}
-			class="inline-flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 outline-none placeholder:text-[var(--grayish-blue)] focus:ring-1 md:w-fit"
+			class="inline-flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 outline-none placeholder:text-[var(--grayish-blue)] focus:border-[var(--moderate-blue)] focus:ring-1 active:border-[var(--moderate-blue)] md:w-fit"
 			placeholder={'Add a comment...'}
 			aria-label={'New Comment'}
 			rows="3"
@@ -50,7 +50,7 @@
 	</div>
 	<input class="hidden" name="commentId" value={id} />
 	<input class="hidden" name="replyingTo" value={replyingTo} />
-  <Button>
+	<Button>
 		{editing ? 'Update' : 'Send'}
 	</Button>
 </form>
