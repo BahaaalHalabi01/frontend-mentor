@@ -19,7 +19,10 @@
 		id: ''
 	});
 
-	let editing = $state(false);
+	let editing = $state<{ bool: boolean; id: string | null; replyId?: string }>({
+		bool: false,
+		id: null
+	});
 
 	const { user } = createUser();
 
@@ -40,9 +43,13 @@
 		}
 	};
 
-	const handleEdit: ChangeEventHandler<HTMLButtonElement> = function () {
-		editing = !editing;
+	const handleEdit: ChangeEventHandler<HTMLButtonElement> = function (event) {
+		const id = event.currentTarget.value;
+		const replyId = event.currentTarget.dataset.replyid;
+		editing = { bool: !editing.bool, id, replyId };
 	};
+
+	$inspect(editing);
 
 	$effect(() => {
 		if (form?.success) {
@@ -52,6 +59,13 @@
 			};
 		}
 	});
+
+	function showEdit(id: number) {
+		const eId = editing.id ?? '';
+		const bool = editing.bool;
+
+		return !(bool && eId === id + '');
+	}
 </script>
 
 <!-- params can be TReply and TComment, but for ease of writing types in snippets, i put it as TReply-->
@@ -127,7 +141,7 @@
 			<p
 				aria-label="comment"
 				class="pr-3 text-base font-normal leading-snug text-[var(--grayish-blue)] md:leading-loose"
-				class:hidden={editing}
+				class:hidden={!showEdit(params.id)}
 			>
 				{#if (params as TReply).replyingTo}
 					<span class="font-bold text-[var(--moderate-blue)]">
@@ -139,19 +153,22 @@
 			<form
 				action="?/edit"
 				method="post"
-				class:hidden={!editing}
+				class:hidden={showEdit(params.id)}
 				class=" flex grow flex-col items-end gap-y-4"
 			>
 				<textarea
+					name="comment"
 					class="flex w-full grow resize-none rounded-lg border border-gray-300 px-4 py-2 outline-none placeholder:text-[var(--grayish-blue)] focus:border-[var(--moderate-blue)] focus:ring-1 active:border-[var(--moderate-blue)]"
 					value={params.content}
 				/>
+				<input class="hidden" name="commentId" value={editing.id} />
+				<input class="hidden" name="replyId" value={editing.replyId} />
 				<Button>Update</Button>
 			</form>
 		</div>
 	</div>
 
-	{#if openState.id === String(params.id) && !editing}
+	{#if openState.id === String(params.id) && !editing.bool}
 		<TextForm
 			replyingTo={openState.replyingTo}
 			open={openState.id === String(params.id)}

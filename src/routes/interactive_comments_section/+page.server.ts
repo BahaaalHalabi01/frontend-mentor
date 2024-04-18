@@ -93,5 +93,42 @@ export const actions = {
 			.where(eq(c.id, Number(commentId)));
 
 		return { success: true };
+	},
+	edit: async ({ request }) => {
+		const form_data = await request.formData();
+		const comment = form_data.get('comment')?.toString();
+		const commentId = form_data.get('commentId')?.toString();
+		const replyId = form_data.get('replyId')?.toString();
+
+		if (!comment || !commentId) return fail(400, { comment, commentId });
+
+		if (!replyId) {
+			await db
+				.update(c)
+				.set({ content: comment })
+				.where(eq(c.id, Number(commentId)));
+
+			return { success: true };
+		}
+
+		const old_comment = await db.query.comments.findFirst({
+			where: eq(c.id, Number(commentId))
+		});
+
+		const replies =
+			old_comment?.replies?.map((r) => {
+				if (r.id !== Number(replyId)) return r;
+
+				return { ...r, content: comment };
+			}) ?? [];
+
+		await db
+			.update(c)
+			.set({
+				replies
+			})
+			.where(eq(c.id, Number(commentId)));
+
+		return { success: true };
 	}
 } satisfies Actions;

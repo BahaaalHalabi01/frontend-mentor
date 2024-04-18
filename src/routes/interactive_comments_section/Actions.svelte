@@ -13,16 +13,14 @@
 		handleEdit: ChangeEventHandler<HTMLButtonElement>;
 	};
 
-	let { replyingTo, id, username, commentId, handleReply, handleEdit, isNested }:TProps = $props();
+	let { replyingTo, id, username, commentId, handleReply, handleEdit, isNested }: TProps = $props();
 
 	const { user } = createUser();
-
 </script>
 
 {#if user?.username === username}
 	<div class="ml-auto flex gap-x-6">
 		<form method="POST" action="?/delete" use:enhance>
-
 			<input class="hidden" name="commentId" value={commentId} />
 			<input class="hidden" name="replyId" value={isNested ? id : ''} />
 			<input class="hidden" name="replyingTo" value={replyingTo ?? username} />
@@ -32,7 +30,12 @@
 				Delete
 			</button>
 		</form>
-		<button class=" btn text-[var(--moderate-blue)]" onclick={handleEdit} value={id}>
+		<button
+			class=" btn text-[var(--moderate-blue)]"
+			onclick={handleEdit}
+			value={id}
+			data-replyid={isNested ? id : ''}
+		>
 			<img src="/interactive_comments/icon-edit.svg" alt="edit" class="inline-flex pr-1.5" />
 			Edit
 		</button>
