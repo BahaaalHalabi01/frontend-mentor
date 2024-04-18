@@ -14,6 +14,9 @@ export const load: PageServerLoad = async () => {
 
 export const actions = {
 	delete: async ({ request }) => {
+		/** remove this return when connecting to your db*/
+		return { deleted: true };
+
 		const form_data = await request.formData();
 		const commentId = form_data.get('commentId');
 		const replyId = form_data.get('replyId');
@@ -95,6 +98,9 @@ export const actions = {
 		return { success: true };
 	},
 	edit: async ({ request }) => {
+		/** remove this return when connecting to your db*/
+		return { success: true };
+
 		const form_data = await request.formData();
 		const comment = form_data.get('comment')?.toString();
 		const commentId = form_data.get('commentId')?.toString();
@@ -111,16 +117,16 @@ export const actions = {
 			return { success: true };
 		}
 
-		const old_comment = await db.query.comments.findFirst({
-			where: eq(c.id, Number(commentId))
+		const old_comment = await db
+			.select()
+			.from(c)
+			.where(eq(c.id, Number(commentId)));
+
+		const replies = old_comment[0]?.replies?.map((r) => {
+			if (r.id !== Number(replyId)) return r;
+
+			return { ...r, content: comment };
 		});
-
-		const replies =
-			old_comment?.replies?.map((r) => {
-				if (r.id !== Number(replyId)) return r;
-
-				return { ...r, content: comment };
-			}) ?? [];
 
 		await db
 			.update(c)

@@ -61,8 +61,11 @@
 	});
 
 	function showEdit(id: number) {
-		const eId = editing.id ?? '';
 		const bool = editing.bool;
+		if (editing.replyId) {
+			return !(bool && editing.replyId === id + '');
+		}
+		const eId = editing.id ?? '';
 
 		return !(bool && eId === id + '');
 	}
@@ -140,7 +143,7 @@
 			</div>
 			<p
 				aria-label="comment"
-				class="pr-3 text-base font-normal leading-snug text-[var(--grayish-blue)] md:leading-loose"
+				class="text-base-normal pr-3 leading-snug text-[var(--grayish-blue)] md:leading-loose"
 				class:hidden={!showEdit(params.id)}
 			>
 				{#if (params as TReply).replyingTo}

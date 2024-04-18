@@ -33,7 +33,7 @@
 		<button
 			class=" btn text-[var(--moderate-blue)]"
 			onclick={handleEdit}
-			value={id}
+			value={isNested ? commentId : id}
 			data-replyid={isNested ? id : ''}
 		>
 			<img src="/interactive_comments/icon-edit.svg" alt="edit" class="inline-flex pr-1.5" />
