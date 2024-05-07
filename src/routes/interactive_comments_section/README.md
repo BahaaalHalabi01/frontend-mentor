@@ -45,10 +45,9 @@ Users should be able to:
 - Basic CSS inside of Svelte's style tag
 - [TailwindCSS](https://tailwindcss.com/)
 - [SvelteKit](https://kit.svelte.dev/) - Official router and framework built on Svelte
-**the below two are only needed if you are going to persist the data
 - [Turso](https://turso.tech/) - hosting my libsql database
 - [Libsql](https://github.com/tursodatabase/libsql) - database of choice
-
+\*\*turso and libsql are only needed if you are going to persist the data, you can create this project without them
 ### What I learned
 
 Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
