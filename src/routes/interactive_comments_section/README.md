@@ -5,8 +5,8 @@ This is a solution to the [Interactive comments section challenge on Frontend Me
 ## Table of contents
 
 - [Overview](#overview)
+  - [Running the project](#running-the-project)
   - [The challenge](#the-challenge)
-  - [Screenshot](#screenshot)
   - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
@@ -16,6 +16,17 @@ This is a solution to the [Interactive comments section challenge on Frontend Me
 - [Acknowledgments](#acknowledgments)
 
 ## Overview
+
+### Running the project
+
+I am using pnpm for running the commands, use whatever you want, change the commands accordingly.
+
+- Install the project <strong>pnpm install</strong>
+- Install turso locally in order to use the database follow [steps](https://docs.turso.tech/cli/installation) here to install on your specific device.
+- For local dev purposes, create a database locally using command <strong>pnpm db:dev</strong>
+- Setup the database url accordingly ( if you ran locally the ip by default is <strong>http://127.0.0.1:8080</strong>)
+- Apply the database schema by running <strong>pnpm db:push</strong>
+- Run the script <strong>/src/lib/server/db/seed.ts</strong> to seed the initial data into the database ( you might need to adjust the env variabeles as well)
 
 ### The challenge
 
@@ -27,10 +38,6 @@ Users should be able to:
 - Upvote and downvote comments
   \*\*Note that the above dynamic behavior is only available if you run the application locally with your database, for demonstration purposes, this will be deployed with commenting out
   the functionality of deleting/editing behavior.
-
-### Screenshot
-
-![](./screenshot.jpg)
 
 ### Links
 
@@ -86,4 +93,3 @@ If you want to use the technologies i used,refer to docs of [tailwindCSS](https:
 
 - Website - [Bahaa al Halabi](https://portfolio-bahaaalhalabi.vercel.app/)
 - Frontend Mentor - [@BahaaalHalabi01](https://www.frontendmentor.io/profile/BahaaalHalabi01)
-

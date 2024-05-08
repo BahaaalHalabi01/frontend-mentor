@@ -14,7 +14,8 @@
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
 		"db:dev": "turso dev --db-file dev.db",
-		"db:studio": "pnpm drizzle-kit studio"
+		"db:studio": "pnpm drizzle-kit studio",
+    "db:push":"pnpm drizzle-kit push:sqlite"
 	},
 	"devDependencies": {
 		"@playwright/test": "1.41.0",
