@@ -26,7 +26,7 @@ Users should be able to:
 - Create, Read, Update, and Delete comments and replies
 - Upvote and downvote comments
   \*\*Note that the above dynamic behavior is only available if you run the application locally with your database, for demonstration purposes, this will be deployed with commenting out
-  the functionality of deleting/editing behavior
+  the functionality of deleting/editing behavior.
 
 ### Screenshot
 
@@ -47,56 +47,43 @@ Users should be able to:
 - [SvelteKit](https://kit.svelte.dev/) - Official router and framework built on Svelte
 - [Turso](https://turso.tech/) - hosting my libsql database
 - [Libsql](https://github.com/tursodatabase/libsql) - database of choice
-\*\*turso and libsql are only needed if you are going to persist the data, you can create this project without them
+  \*\*turso and libsql are only needed if you are going to persist the data, you can create this project without them
+
 ### What I learned
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
+Using Svelte5's new <snippet> functionality was nice, at first i tried to over use it instead of simply making a component for the nested comments, but i found that to be messy (specially with types).I ended up creating <TextForm/> as its own component.
 
-To see how you can add code snippets, see below:
+I truly didn't think it would be complicated to create such a thing, but the nesting( having a comment inside of a comment) with a form in each section, made it annoying the least.
 
-```html
-<h1>Some HTML code I'm proud of</h1>
+This is what i used to nest the comment inside of itself, i do not believe this is the most optimal approach, but after some iterations, this is what ended up the best.
+
+```svelte
+<div class="flex flex-col gap-y-2">
+	{@render entry(comment as TReply)}
+	{#if replies.length > 0}
+		<div class="flex gap-x-4 pt-4 md:gap-x-8">
+			<div class="border-r-2 border-gray-300 md:pl-8"></div>
+			<div class="flex w-full flex-col gap-y-4">
+				{#each replies as reply ('reply' + reply.id)}
+					{@render entry({ ...reply, isNested: true })}
+				{/each}
+			</div>
+		</div>
+	{/if}
+</div>
 ```
-
-```css
-.proud-of-this-css {
-	color: papayawhip;
-}
-```
-
-```js
-const proudOfThisFunc = () => {
-	console.log('🎉');
-};
-```
-
-If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
-
-**Note: Delete this note and the content within this section and replace with your own learnings.**
 
 ### Continued development
 
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
-
-**Note: Delete this note and the content within this section and replace with your own plans for continued development.**
+- [] Add Login capabilities
+- [] Add different comment pages, having a step before this page shows ( ex: create a topic first then this shows)
 
 ### Useful resources
 
-- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
-- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
-
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
+If you want to use the technologies i used,refer to docs of [tailwindCSS](https://tailwindcss.com/) and [svelteKit](https://kit.svelte.dev/) (specially the learn.svelte.dev website)
 
 ## Author
 
-- Website - [Add your name here](https://www.your-site.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
+- Website - [Bahaa al Halabi](https://portfolio-bahaaalhalabi.vercel.app/)
+- Frontend Mentor - [@BahaaalHalabi01](https://www.frontendmentor.io/profile/BahaaalHalabi01)
 
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
-
-## Acknowledgments
-
-This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
-
-**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**
